@@ -1,0 +1,726 @@
+﻿ĐỀ CƯƠNG CẢI TIẾN
+ỨNG DỤNG CRM CHĂM SÓC SỨC KHỎE KHÉP KÍN
+Phiên bản thân thiện – Tiện lợi – Dễ sử dụng – Dễ theo dõi
+PHẦN MỞ ĐẦU: TẦM NHÌN & TRIẾT LÝ THIẾT KẾ
+1. Tầm nhìn
+Xây dựng một "người bạn đồng hành số" cho bác sĩ và nhà quản lý chăm sóc sức khỏe, giúp biến quy trình chăm sóc phức tạp thành một hành trình đơn giản, liền mạch và nhân văn – nơi mỗi khách hàng có một hồ sơ duy nhất, một kế hoạch duy nhất, một dòng theo dõi duy nhất xuyên suốt từ tiếp nhận đến phòng bệnh chủ động.
+2. Triết lý thiết kế: "3 Dễ – 3 Nhanh – 3 An tâm"
+3 DỄ
+3 NHANH
+3 AN TÂM
+Dễ hiểu – Dễ dùng – Dễ theo dõi
+Nhập liệu nhanh – Tra cứu nhanh – Báo cáo nhanh
+An tâm dữ liệu – An tâm chuyên môn – An tâm pháp lý
+3. Nguyên tắc cải tiến cốt lõi (so với đề xuất cũ)
+Giảm tải nhập liệu: Mọi trường thông tin đều có gợi ý, mẫu sẵn, chọn nhanh thay vì gõ tay.
+Trực quan hóa hành trình: Mỗi khách hàng là một "dòng thời gian sức khỏe" (Health Timeline) nhìn thấy ngay tiến triển.
+Phân lớp thông tin: Thông tin "cần ngay" hiển thị trước; thông tin chuyên sâu mở rộng khi cần.
+Tự động hóa thông minh: Nhắc việc, cảnh báo, tổng hợp – nhưng quyết định chuyên môn luôn thuộc về con người.
+Ngôn ngữ thân thiện: Bỏ thuật ngữ hành chính khô khan, dùng ngôn ngữ gần gũi với người dùng cuối.
+PHẦN I: KIẾN TRÚC TỔNG THỂ 4 GIAI ĐOẠN
+text
+┌─────────────────────────────────────────────────────────────────┐
+│                    HÀNH TRÌNH CHĂM SÓC KHÉP KÍN                 │
+│                                                                 │
+│  [1] TIẾP NHẬN      [2] LẬP KẾ HOẠCH    [3] THEO DÕI    [4] CHỦ ĐỘNG │
+│      & ĐÁNH GIÁ   →   RECIPE CÁ NHÂN  →   & ĐIỀU CHỈNH →  & PHÒNG BỆNH │
+│                                                                 │
+│  "Hiểu đúng"      "Lên đường đúng"    "Đi đúng hướng"  "Sống khỏe" │
+└─────────────────────────────────────────────────────────────────┘
+Điểm cải tiến then chốt: Mỗi giai đoạn được thiết kế như một "trạm dừng" trên bản đồ hành trình, với:
+Đầu vào rõ ràng (cần gì)
+Đầu ra cụ thể (có gì)
+Chuyển giai đoạn tự động (khi nào sang bước tiếp)
+Quay lại linh hoạt (khi có vấn đề mới)
+GIAI ĐOẠN 1: TIẾP NHẬN, ĐÁNH GIÁ & LẬP HỒ SƠ SỨC KHỎE
+Khẩu hiệu: "Hiểu đúng để chăm đúng"
+1.1. Tổng quan giao diện giai đoạn 1 – "Bảng điều khiển tiếp nhận"
+Cải tiến lớn: Thay vì một form dài 10 trang, chia thành 6 thẻ thông minh (Smart Cards) có thể mở rộng/thu gọn, với thanh tiến độ hoàn thiện hồ sơ hiển thị rõ:
+text
+┌──────────────────────────────────────────────────────────┐
+│  HỒ SƠ MỚI: Nguyễn Văn A          Tiến độ: ████████░░ 80% │
+├──────────────────────────────────────────────────────────┤
+│  ✅ 1. Thông tin cá nhân & Nhu cầu        [Đã hoàn thành] │
+│  ✅ 2. Bệnh sử & Lâm sàng                 [Đã hoàn thành] │
+│  ⏳ 3. Tứ chẩn YHCT (nếu áp dụng)         [Đang nhập]     │
+│  ⬜ 4. Lối sống & Bối cảnh                [Chưa nhập]     │
+│  ⬜ 5. Thuốc & Sản phẩm đang dùng          [Chưa nhập]     │
+│  ⬜ 6. Tổng hợp & Mục tiêu                [Chưa nhập]     │
+│                                                          │
+│  [Lưu nháp]  [Nhập nhanh bằng giọng nói]  [Xuất hồ sơ]   │
+└──────────────────────────────────────────────────────────┘
+1.2. Chi tiết 6 thẻ thông minh
+THẺ 1: Thông tin cá nhân & Nhu cầu – "Biết ai, biết mong gì"
+Nhóm thông tin
+Trường dữ liệu
+Cải tiến thân thiện
+Định danh
+Mã hồ sơ (tự sinh), họ tên, ngày sinh, giới tính, liên hệ, địa chỉ/khu vực
+Tự động điền từ CCCD/QR code; gợi ý địa chỉ theo GPS
+Người đồng hành
+Người liên hệ khẩn cấp, người chăm sóc chính, quan hệ gia đình, người được phép nhận thông tin
+Chọn từ danh bạ; tick chọn "được phép nhận thông tin" rõ ràng
+Nguồn tiếp nhận
+Kênh đến (giới thiệu, online, walk-in...), người phụ trách, ngày tiếp nhận, lịch hẹn
+Chọn từ dropdown; tự động gán người phụ trách theo ca trực
+Nhu cầu & Kỳ vọng
+Lý do tìm đến, vấn đề ưu tiên, mong muốn/kỳ vọng, mục tiêu khách hàng, khả năng theo đuổi kế hoạch
+Dùng thang đo mức độ ưu tiên (1-5 sao); gợi ý mục tiêu mẫu theo độ tuổi/bệnh lý
+Cải tiến: Thêm trường "Câu chuyện của khách hàng" – ô ghi chú tự do để bác sĩ ghi lại lý do sâu xa, giúp cá nhân hóa kế hoạch.
+THẺ 2: Bệnh sử & Hồ sơ lâm sàng – "Hiểu bệnh, hiểu người"
+Nhóm thông tin
+Trường dữ liệu
+Cải tiến thân thiện
+Bệnh sử
+Lý do khám, thời điểm khởi phát, diễn biến, bệnh đã chẩn đoán, tiền sử cá nhân/gia đình
+Timeline trực quan: kéo thả mốc thời gian; chọn bệnh từ danh mục ICD-10 gợi ý
+Triệu chứng hiện tại
+Vị trí, mức độ, tần suất, thời điểm, yếu tố tăng/giảm, ảnh hưởng sinh hoạt
+Bản đồ cơ thể tương tác: click vào vị trí đau; thang điểm đau 0-10 trực quan
+Dấu hiệu sinh tồn
+Huyết áp, mạch, nhiệt độ, cân nặng, chiều cao, BMI, vòng bụng...
+Tự động tính BMI; cảnh báo bất thường (màu đỏ nếu ngoài ngưỡng)
+Tài liệu y tế
+Kết quả xét nghiệm, chẩn đoán hình ảnh, giấy ra viện, đơn thuốc
+Kéo thả file; OCR tự động điền ngày & cơ sở thực hiện
+An toàn
+Dị ứng, phản ứng bất lợi, phẫu thuật, thai kỳ/cho con bú, chống chỉ định
+Cảnh báo đỏ tự động khi kê đơn trùng dị ứng
+Cải tiến: Thêm nút "So sánh với lần khám trước" – hiển thị song song các chỉ số để thấy thay đổi.
+THẺ 3: Tứ chẩn & Đánh giá YHCT – "Nhìn – Nghe – Hỏi – Chạm"
+Tứ chẩn
+Nội dung
+Cải tiến thân thiện
+Vọng chẩn
+Sắc diện, thần thái, hình thể, vận động, lưỡi
+Thư viện ảnh mẫu lưỡi/sắc diện; chọn nhanh thay vì mô tả dài
+Văn chẩn
+Tiếng nói, hơi thở, ho, mùi
+Checklist nhanh các dấu hiệu thường gặp
+Vấn chẩn
+Hàn/nhiệt, mô hôi, ăn uống, khát, đại tiểu tiện, giấc ngủ, đau, kinh nguyệt
+Bộ câu hỏi thông minh tự gợi ý theo giới/tuổi/triệu chứng
+Thiết chẩn
+Mạch, thăm khám phù hợp
+Ghi nhận mạch theo bảng mạch YHCT trực quan; đính kèm ghi chú chuyên môn
+Cải tiến quan trọng:
+Thêm trường "Mức độ chắc chắn của nhận định" (Cao/Trung bình/Thấp) để minh bạch hóa.
+Ghi rõ: "Nhận định YHCT không thay thế chẩn đoán y học hiện đại" – hiển thị dưới dạng ghi chú cố định.
+Nút "Bỏ qua nếu không áp dụng" – tôn trọng phạm vi chuyên môn.
+THẺ 4: Lối sống & Bối cảnh cá nhân – "Sống thế nào, chăm thế ấy"
+Lĩnh vực
+Nội dung
+Cải tiến thân thiện
+Dinh dưỡng
+Khẩu phần, giờ ăn, khẩu vị, lượng nước, kiêng khem, thay đổi cân nặng, nguy cơ suy dinh dưỡng
+Bảng chọn món ăn trực quan; tính nhanh calo ước lượng
+Giấc ngủ
+Giờ đi ngủ/thức, thời gian ngủ, thức giấc đêm, chất lượng, buồn ngủ ban ngày
+Biểu đồ giấc ngủ 7 ngày; thang điểm chất lượng 1-10
+Vận động
+Loại hình, tần suất, thời lượng, cường độ, nguy cơ té ngã, hạn chế thể chất
+Gợi ý bài tập mẫu theo thể trạng; đánh giá nguy cơ té ngã
+Tâm lý
+Mức năng lượng, lo âu, tâm trạng, hỗ trợ tinh thần, nhu cầu tư vấn
+Thang đo PHQ-9/GAD-7 rút gọn (nếu phù hợp); biểu tượng cảm xúc trực quan
+Thói quen
+Hút thuốc, rượu bia, chất kích thích, thời gian màn hình, công việc, lịch sinh hoạt
+Đánh giá nhanh mức độ; gợi ý cải thiện
+Gia đình/Xã hội
+Người chăm sóc, điều kiện kinh tế, khả năng tiếp cận chăm sóc, môi trường nhà ở
+Đánh giá "nguồn lực hỗ trợ" (Có/Không/Hạn chế)
+Khí hậu/Môi trường
+Nóng/lạnh, độ ẩm, mùa, ô nhiễm, dị nguyên, yếu tố làm thay đổi triệu chứng
+Tự động lấy thời tiết địa phương; ghi nhận yếu tố kích thích
+Cải tiến: Tạo "Bản đồ lối sống" – một hình ảnh tổng quan 7 lĩnh vực với đèn xanh/vàng/đỏ, giúp bác sĩ nắm nhanh điểm mạnh/yếu.
+THẺ 5: Thuốc & Sản phẩm đang dùng – "Dùng gì, tương tác gì"
+Trường
+Nội dung
+Cải tiến thân thiện
+Thông tin thuốc
+Tên, hoạt chất, hàm lượng, liều, đường dùng, thời điểm, người chỉ định, ngày bắt đầu/kết thúc
+Quét đơn thuốc bằng camera – OCR tự điền; chọn từ danh mục thuốc
+Tuân thủ & Hiệu quả
+Mức tuân thủ, hiệu quả cảm nhận, phản ứng bất lợi
+Thang điểm 1-5; ghi chú nhanh
+Phân loại
+Thuốc kê đơn, không kê đơn, thảo dược, thực phẩm bổ sung
+Màu sắc phân biệt; biểu tượng cảnh báo tương tác
+Rà soát tương tác
+Đánh dấu phối hợp cần bác sĩ/dược sĩ rà soát
+Tự động cảnh báo khi phát hiện tương tác nguy hiểm
+Cải tiến: Nút "Kiểm tra tương tác" – hệ thống tự động so sánh với cơ sở dữ liệu tương tác thuốc – thảo dược, đưa ra cảnh báo theo mức độ.
+THẺ 6: Tổng hợp & Mục tiêu – "Chốt lại để lên đường"
+Đầu ra giai đoạn 1 (hiển thị dạng "Bảng tổng hợp một trang"):
+text
+┌─────────────────────────────────────────────────────────┐
+│  TỔNG HỢP HỒ SƠ: Nguyễn Văn A                           │
+├─────────────────────────────────────────────────────────┤
+│  📋 Vấn đề ưu tiên:                                     │
+│     1. Mất ngủ mãn tính (ưu tiên cao)                   │
+│     2. Đau lưng mạn (ưu tiên trung bình)                │
+│     3. Lo âu nhẹ (ưu tiên trung bình)                   │
+│                                                         │
+│  ⚠️  Dữ liệu còn thiếu: Kết quả xét nghiệm máu          │
+│  🚨 Nguy cơ cần chuyển khám: Không phát hiện            │
+│  🎯 Mục tiêu chăm sóc đã thống nhất:                    │
+│     - Ngủ 7-8 tiếng/đêm trong 4 tuần                    │
+│     - Giảm đau lưng từ 6/10 xuống 3/10                  │
+│     - Duy trì tập luyện 3 lần/tuần                      │
+│                                                         │
+│  [Chuyển sang Giai đoạn 2: Lập kế hoạch]                │
+└─────────────────────────────────────────────────────────┘
+GIAI ĐOẠN 2: BÁC SĨ LẬP RECIPE / KẾ HOẠCH CHĂM SÓC CÁ NHÂN HÓA
+Khẩu hiệu: "Lên đường đúng – Mỗi người một con đường"
+2.1. Tổng quan giao diện giai đoạn 2 – "Xưởng thiết kế kế hoạch"
+Cải tiến lớn: Recipe không còn là bảng khô khan, mà là "bản thiết kế hành trình" trực quan với:
+text
+┌──────────────────────────────────────────────────────────┐
+│  RECIPE: Nguyễn Văn A          Phiên bản: v1.0  [Duyệt]  │
+├──────────────────────────────────────────────────────────┤
+│  🎯 Mục tiêu lớn: Cải thiện giấc ngủ & giảm đau lưng    │
+│  📅 Thời gian: 01/06 – 30/08 (3 tháng, chia 3 đợt)      │
+├──────────────────────────────────────────────────────────┤
+│  ĐỢT 1 (01/06 – 30/06): "Khởi động – Làm quen"           │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │ 🌿 Thảo dược:  [Tên] [Liều] [Thời điểm] [Ngày]    │  │
+│  │ 🏃 Vận động:   [Bài tập] [Tần suất] [Thời lượng]   │  │
+│  │ 🍲 Dinh dưỡng: [Thực đơn mẫu] [Kiêng khem]         │  │
+│  │ 🧠 Tâm lý:     [Bài tập thở] [Thiền] [Tư vấn]      │  │
+│  │ 📋 Hướng dẫn tự chăm sóc & lịch khám               │  │
+│  └────────────────────────────────────────────────────┘  │
+│  [+ Thêm đợt mới]  [Gia hạn]  [Tạm dừng]  [Kết thúc]   │
+└──────────────────────────────────────────────────────────┘
+2.2. Cấu trúc kế hoạch chi tiết – "Bảng điều khiển can thiệp"
+A. Phần mục tiêu & chỉ số
+Trường
+Nội dung
+Cải tiến thân thiện
+Vấn đề ưu tiên
+Kéo từ giai đoạn 1
+Tự động đồng bộ
+Mục tiêu ngắn hạn
+Theo từng đợt (VD: trong 4 tuần)
+Gợi ý mục tiêu SMART (Cụ thể – Đo được – Khả thi – Liên quan – Có thời hạn)
+Mục tiêu dài hạn
+Theo toàn bộ hành trình
+Hiển thị dạng thanh tiến độ
+Chỉ số nền để so sánh
+Đau 6/10, ngủ 4h/đêm, ...
+Tự động lấy từ hồ sơ; biểu đồ so sánh
+B. Phần can thiệp – 5 nhóm chính (thay vì 6 nhóm rời rạc)
+Nhóm can thiệp
+Nội dung
+Cải tiến thân thiện
+1. Thuốc & Thảo dược
+Tên/loại, mục đích, liều, đường dùng, thời điểm, ngày bắt đầu/kết thúc, số ngày/tuần, người chỉ định, hướng dẫn, lưu ý
+Thư viện mẫu được duyệt; kéo thả để thêm; cảnh báo tương tác tự động
+2. Dinh dưỡng
+Thực đơn mẫu, kiêng khem, lượng nước, bổ sung
+Thư viện thực đơn theo bệnh lý/thể trạng; xuất file PDF gửi khách
+3. Vận động
+Bài tập, tần suất, thời lượng, cường độ, lưu ý
+Video hướng dẫn đính kèm; bài tập mẫu theo thể trạng
+4. Tâm lý & Giấc ngủ
+Bài tập thở, thiền, tư vấn, vệ sinh giấc ngủ
+Audio hướng dẫn; checklist vệ sinh giấc ngủ
+5. Hướng dẫn tự chăm sóc & Lịch khám
+Việc cần làm, dấu hiệu cảnh báo, lịch tái khám/xét nghiệm
+Checklist hàng ngày; nhắc lịch tự động
+Cải tiến quan trọng: Mỗi can thiệp có "thẻ can thiệp" hiển thị đầy đủ:
+text
+┌─────────────────────────────────────────────────────┐
+│  🌿 THẢO DƯỢC: Trà hoa cúc – Tâm sen                │
+│  ├─ Mục đích: An thần, cải thiện giấc ngủ           │
+│  ├─ Liều: 1 gói/lần, 2 lần/ngày                     │
+│  ├─ Thời điểm: Sáng và tối trước ngủ 30 phút        │
+│  ├─ Đợt: 1  |  Bắt đầu: 01/06  |  Kết thúc: 30/06   │
+│  ├─ Người chỉ định: BS. Trần B                      │
+│  ├─ Hướng dẫn: Hãm với 200ml nước sôi 10 phút       │
+│  └─ Lưu ý: Không dùng chung với thuốc chống đông    │
+│  [Trạng thái: Đang thực hiện] [Ghi nhận phản hồi]    │
+└─────────────────────────────────────────────────────┘
+C. Phần quản lý đợt – "Chia nhỏ để dễ theo"
+Tính năng
+Mô tả
+Cải tiến thân thiện
+Tạo đợt
+Đợt 1, Đợt 2...
+Timeline trực quan; kéo thả để điều chỉnh
+Gia hạn
+Kéo dài đợt hiện tại
+1 click; ghi lý do tự động
+Tạm dừng
+Dừng tạm thời
+Ghi lý do; đặt lịch nhắc quay lại
+Kết thúc
+Kết thúc đợt
+Tự động tổng kết; chuyển sang giai đoạn 4 nếu đạt mục tiêu
+Lịch sử thay đổi
+Ai sửa, khi nào, vì sao
+Audit trail rõ ràng; so sánh phiên bản
+D. Phần kế hoạch dự phòng – "Biết trước để an tâm"
+Trường
+Nội dung
+Điều cần tránh
+Thực phẩm, thói quen, yếu tố kích thích
+Dấu hiệu cảnh báo
+Triệu chứng cần chú ý
+Khi nào liên hệ nhân viên
+Ngưỡng liên hệ
+Khi nào cần khám khẩn cấp
+Dấu hiệu đỏ
+Cải tiến: Hiển thị dạng "Thẻ an toàn" – in ra hoặc gửi điện thoại cho khách hàng.
+E. Phần xác nhận & tuân thủ
+Trường
+Nội dung
+Cải tiến thân thiện
+Giải thích cho khách
+Đã giải thích, khách hiểu, khách đồng ý
+Checklist xác nhận; chữ ký số/OTP
+Rào cản tuân thủ
+Khó khăn có thể ảnh hưởng
+Gợi ý giải pháp; ghi nhận
+2.3. Đầu ra giai đoạn 2
+Recipe đã duyệt (có phiên bản, người duyệt, thời gian)
+Bản kế hoạch tóm tắt 1 trang gửi khách hàng (PDF/App)
+Lịch nhắc tự động đã thiết lập
+Thẻ an toàn cho khách hàng
+GIAI ĐOẠN 3: THEO DÕI, ĐÁNH GIÁ & ĐIỀU CHỈNH
+Khẩu hiệu: "Đi đúng hướng – Kịp thời điều chỉnh"
+3.1. Tổng quan giao diện giai đoạn 3 – "Bảng điều khiển theo dõi"
+Cải tiến lớn: Thay vì nhật ký rời rạc, tạo "Dòng thời gian sức khỏe" (Health Timeline) – mọi dữ liệu theo dõi hiển thị trên một trục thời gian duy nhất:
+text
+┌──────────────────────────────────────────────────────────────┐
+│  THEO DÕI: Nguyễn Văn A                    [7 ngày] [30 ngày] │
+├──────────────────────────────────────────────────────────────┤
+│  📊 BIỂU ĐỒ TỔNG QUAN                                        │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Đau lưng:  ████████░░ 6/10 → █████░░░░░ 4/10 (↓ tốt)   │  │
+│  │ Giấc ngủ:  ████░░░░░░ 4h  → ███████░░░ 6.5h (↑ tốt)   │  │
+│  │ Tuân thủ:  ████████░░ 80%  → █████████░ 90% (↑ tốt)   │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  📅 NHẬT KÝ GẦN NHẤT                                         │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ 15/06 ✅ Đã uống trà tâm sen, tập 20 phút, ngủ 6h      │  │
+│  │ 14/06 ⚠️ Bỏ liều tối, đau lưng 5/10, ngủ 5h            │  │
+│  │ 13/06 ✅ Hoàn thành đầy đủ, ngủ 6.5h                   │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  🚨 CẢNH BÁO: 3 khách hàng khác đang chờ xử lý...          │
+└──────────────────────────────────────────────────────────────┘
+3.2. Nhật ký theo dõi định kỳ – "Ghi nhanh – Hiểu nhanh"
+A. Biểu mẫu nhật ký thông minh (Mobile-first)
+Cải tiến: Thiết kế "thẻ nhật ký 1 phút" – khách hàng chỉ cần 60 giây để hoàn thành:
+text
+┌─────────────────────────────────────────────────────┐
+│  NHẬT KÝ NGÀY 15/06/2025                            │
+├─────────────────────────────────────────────────────┤
+│  😴 Giấc ngủ:    [Tốt] [Tạm] [Kém]    Số giờ: [6.5]│
+│  😣 Đau:         Vị trí: [Lưng dưới]   Mức: [4/10]  │
+│  🍚 Ăn uống:     [Ngon] [Tạm] [Kém]                 │
+│  ⚡ Năng lượng:  [Đủ] [Tạm] [Mệt]                   │
+│  💊 Tuân thủ:    ✅ Đã uống đủ  ✅ Tập đủ            │
+│  📝 Ghi chú:     [___________________________]       │
+│                                                     │
+│  [Gửi nhật ký]  [Chụp ảnh đính kèm]                 │
+└─────────────────────────────────────────────────────┘
+B. Các nhóm theo dõi chi tiết
+Nhóm
+Nội dung
+Cải tiến thân thiện
+Triệu chứng chính
+Mức độ đau, vị trí, ho/khó thở, triệu chứng đặc thù
+Bản đồ cơ thể; thang điểm trực quan
+Giấc ngủ
+Thời lượng, số lần thức, chất lượng
+Biểu đồ giấc ngủ; so sánh tuần
+Ăn uống & Tiêu hóa
+Khẩu vị, lượng ăn, buồn nôn, đầy bụng, đại tiện
+Checklist nhanh; biểu tượng trực quan
+Tinh thần & Năng lượng
+Mệt mỏi, tâm trạng, căng thẳng, sinh hoạt
+Biểu tượng cảm xúc; thang điểm 1-10
+Chỉ số khách quan
+Cân nặng, huyết áp, đường huyết, xét nghiệm
+Nhập tay hoặc kết nối thiết bị đo
+Tuân thủ
+Từng mục kế hoạch: đã dùng/bỏ lỡ, khó khăn
+Checklist tự động từ recipe
+Bất thường
+Tác dụng phụ, triệu chứng mới, thay đổi thuốc
+Cảnh báo đỏ khi phát hiện
+3.3. Nhịp theo dõi & Quy trình xử lý – "Đúng người – Đúng lúc"
+A. Lịch check-in thông minh
+Mức nguy cơ
+Nhịp theo dõi
+Cải tiến thân thiện
+Cao
+Hàng ngày
+Nhắc tự động; dashboard riêng
+Trung bình
+Hàng tuần
+Nhắc 2 lần/tuần; tổng hợp tuần
+Thấp
+Theo đợt
+Nhắc theo mốc đợt
+Cải tiến: Hệ thống tự động điều chỉnh nhịp dựa trên kết quả theo dõi (nếu ổn định → giãn nhịp; nếu xấu đi → tăng nhịp).
+B. Dashboard cho nhân viên – "Mọi việc trong tầm mắt"
+Cải tiến lớn: Dashboard được thiết kế lại thành "Bảng điều khiển ưu tiên":
+text
+┌──────────────────────────────────────────────────────────────┐
+│  DASHBOARD CSKH – Hôm nay 15/06                              │
+├──────────────────────────────────────────────────────────────┤
+│  🔴 CẦN XỬ LÝ NGAY (3)                                       │
+│     • Nguyễn Văn A – Báo đau tăng 8/10, cần gọi lại          │
+│     • Trần Thị B – Bỏ theo dõi 5 ngày, cần liên hệ           │
+│     • Lê Văn C – Phản ứng bất lợi với thảo dược              │
+│                                                              │
+│  🟡 ĐẾN HẠN LIÊN HỆ (5)                                      │
+│     • 3 khách hàng đến hạn check-in tuần                     │
+│     • 2 khách hàng cần tái khám                              │
+│                                                              │
+│  🟢 ĐANG ỔN ĐỊNH (12)                                        │
+│     • 12 khách hàng tuân thủ tốt, không có bất thường        │
+│                                                              │
+│  [Xem chi tiết]  [Xuất báo cáo ngày]                         │
+└──────────────────────────────────────────────────────────────┘
+C. Quy trình xử lý cảnh báo – "Đúng tuyến – Đúng hạn"
+Bước
+Hành động
+Người phụ trách
+Cải tiến thân thiện
+1. Phát hiện
+Hệ thống tự động phát hiện bất thường
+Hệ thống
+Cảnh báo đa kênh (app, SMS, email)
+2. Phân loại
+Đỏ (khẩn) / Vàng (cần xử lý) / Xanh (theo dõi)
+Hệ thống gợi ý
+Tự động phân loại theo ngưỡng
+3. Chuyển tuyến
+Chuyển đến đúng người phụ trách
+Điều dưỡng/CSKH
+1 click chuyển; thông báo tự động
+4. Xử lý
+Liên hệ, đánh giá, quyết định
+Bác sĩ/điều dưỡng
+Ghi nhận kết quả ngay trên app
+5. Đóng cảnh báo
+Ghi nhận đã xử lý, kết quả
+Người xử lý
+Audit trail đầy đủ
+Cải tiến quan trọng:
+Không để AI tự chẩn đoán – AI chỉ tổng hợp, gợi ý câu hỏi, phát hiện dữ liệu thiếu.
+Trường hợp dấu hiệu cấp cứu: hiển thị ngay hướng dẫn liên hệ cấp cứu/cơ sở y tế phù hợp.
+D. Đánh giá định kỳ & điều chỉnh – "Nhìn lại để đi tiếp"
+Mốc đánh giá
+Nội dung
+Cải tiến thân thiện
+Cuối đợt
+Cải thiện / Ổn định / Chưa đạt / Xấu đi
+Biểu đồ so sánh trực quan
+Quyết định
+Giữ nguyên / Điều chỉnh / Tạm dừng / Chuyển tuyến
+Gợi ý dựa trên dữ liệu; bác sĩ quyết định
+Ghi nhận thay đổi
+Ai thực hiện, thời gian, lý do, phiên bản
+So sánh phiên bản; audit trail
+3.4. Đầu ra giai đoạn 3
+Báo cáo tiến triển theo đợt (so sánh với chỉ số nền)
+Danh sách vấn đề cần xử lý (ưu tiên rõ ràng)
+Quyết định chuyên môn (có căn cứ, có người chịu trách nhiệm)
+Kế hoạch tiếp theo (nếu cần điều chỉnh)
+GIAI ĐOẠN 4: CHĂM SÓC CHỦ ĐỘNG, DUY TRÌ & PHÒNG BỆNH
+Khẩu hiệu: "Sống khỏe – Chủ động – Bền vững"
+4.1. Tổng quan giao diện giai đoạn 4 – "Vườn sức khỏe"
+Cải tiến lớn: Khi vấn đề ưu tiên đã ổn định, CRM chuyển từ "theo dõi trị liệu" sang "quản lý sức khỏe dài hạn" với giao diện hoàn toàn khác – tập trung vào duy trì, phòng bệnh và phát triển:
+text
+┌──────────────────────────────────────────────────────────────┐
+│  VƯỜN SỨC KHỎE: Nguyễn Văn A              [Cấp độ: Duy trì]  │
+├──────────────────────────────────────────────────────────────┤
+│  🌱 HỒ SƠ NGUY CƠ & MỤC TIÊU PHÒNG BỆNH                      │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ Tuổi: 45  |  Giới: Nam  |  Nguy cơ: Tim mạch, Đái tháo │  │
+│  │ đường  |  Tiền sử gia đình: Tăng huyết áp              │  │
+│  │ Khuyến nghị: Tầm soát tim mạch 6 tháng/lần             │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  🎯 KẾ HOẠCH DUY TRÌ                                          │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ 🍲 Dinh dưỡng: Thực đơn Địa Trung Hải, giảm muối       │  │
+│  │ 🏃 Vận động:   Đi bộ 30 phút x 5 ngày/tuần            │  │
+│  │ 😴 Giấc ngủ:   7-8 tiếng, vệ sinh giấc ngủ            │  │
+│  │ 🧠 Căng thẳng: Thiền 10 phút/ngày, yoga 2 lần/tuần    │  │
+│  │ 🚭 Thói quen:  Đã bỏ thuốc, hạn chế rượu bia          │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  📅 LỊCH NHẮC & SÀNG LỌC                                      │
+│  • 20/06: Tái khám định kỳ  • 15/07: Xét nghiệm máu         │
+│  • 01/08: Tầm soát tim mạch  • 15/09: Tiêm phòng cúm        │
+│                                                              │
+│  📊 CHỈ SỐ THEO THỜI GIAN                                     │
+│  [Biểu đồ xu hướng: Huyết áp, Cân nặng, Đường huyết...]      │
+└──────────────────────────────────────────────────────────────┘
+4.2. Các thành phần chính giai đoạn 4
+A. Hồ sơ nguy cơ & Mục tiêu phòng bệnh – "Biết trước để phòng"
+Trường
+Nội dung
+Cải tiến thân thiện
+Yếu tố nguy cơ
+Tuổi, giới, bệnh sử, tiền sử gia đình, lối sống
+Tự động tổng hợp từ hồ sơ; đánh giá mức độ
+Khuyến nghị chuyên môn
+Tầm soát, tiêm chủng, sàng lọc theo tuổi/nguy cơ
+Gợi ý theo guideline (Bộ Y tế, chuyên ngành)
+Mục tiêu phòng bệnh
+Ngắn hạn & dài hạn
+Gợi ý mục tiêu SMART; theo dõi tiến độ
+B. Kế hoạch duy trì – "Sống khỏe mỗi ngày"
+Lĩnh vực
+Nội dung
+Cải tiến thân thiện
+Dinh dưỡng
+Thực đơn mẫu, kiêng khem, bổ sung
+Thư viện thực đơn theo mùa/thể trạng
+Vận động
+Bài tập, tần suất, thời lượng
+Video hướng dẫn; theo dõi tự động qua thiết bị
+Giấc ngủ
+Vệ sinh giấc ngủ, thói quen
+Checklist hàng ngày; nhắc nhở
+Quản lý căng thẳng
+Thiền, yoga, thư giãn
+Audio hướng dẫn; theo dõi tâm trạng
+Thói quen lành mạnh
+Bỏ thuốc, hạn chế rượu, thời gian màn hình
+Theo dõi streak (chuỗi ngày thành công)
+C. Lịch nhắc & Sàng lọc – "Đúng hẹn – Đúng việc"
+Loại nhắc
+Nội dung
+Cải tiến thân thiện
+Tái khám định kỳ
+Theo khuyến nghị bác sĩ
+Tự động đặt lịch; nhắc trước 3 ngày
+Xét nghiệm định kỳ
+Theo chỉ định
+Nhắc trước 1 tuần; gợi ý cơ sở
+Tiêm chủng/Sàng lọc
+Theo tuổi/nguy cơ
+Gợi ý theo guideline; nhắc tự động
+Tầm soát chuyên biệt
+Tim mạch, ung thư, đái tháo đường...
+Cá nhân hóa theo nguy cơ
+D. Theo dõi chỉ số theo thời gian – "Xu hướng quan trọng hơn con số"
+Cải tiến: Hiển thị biểu đồ xu hướng thay vì chỉ số đơn lẻ:
+text
+┌──────────────────────────────────────────────────────────────┐
+│  XU HƯỚNG SỨC KHỎE – 6 THÁNG GẦN NHẤT                        │
+├──────────────────────────────────────────────────────────────┤
+│  Huyết áp:  ▁▂▃▄▅▆▇ 130/85 → 120/80 (↓ tốt)                │
+│  Cân nặng:  ▇▆▅▄▃▂▁ 78kg → 72kg (↓ tốt)                     │
+│  Đường huyết: ▁▂▃▄▅▆▇ 5.8 → 5.2 mmol/L (↓ tốt)             │
+│                                                              │
+│  💡 Gợi ý: Duy trì chế độ ăn hiện tại, tăng cường vận động  │
+│  ⚠️  Lưu ý: Theo dõi huyết áp đều đặn, tái khám đúng hẹn    │
+└──────────────────────────────────────────────────────────────┘
+E. Phân nhóm chăm sóc – "Đúng nhóm – Đúng mức"
+Nhóm
+Đặc điểm
+Hành động
+Cải tiến thân thiện
+Cần theo dõi sát
+Nguy cơ cao, bệnh nặng
+Theo dõi thường xuyên
+Dashboard riêng; cảnh báo sớm
+Duy trì định kỳ
+Ổn định, cần kiểm tra định kỳ
+Tái khám theo lịch
+Nhắc tự động; báo cáo định kỳ
+Chăm sóc chủ động
+Khỏe mạnh, cần phòng bệnh
+Duy trì lối sống, sàng lọc
+Kế hoạch duy trì; nhắc sàng lọc
+Đã ngừng theo dõi
+Đã ổn định hoàn toàn
+Lưu hồ sơ, kích hoạt khi cần
+Lưu trữ an toàn; dễ tái kích hoạt
+Cần tái kích hoạt
+Lâu không tương tác
+Liên hệ, đánh giá lại
+Tự động phát hiện; gợi ý liên hệ
+F. Chăm sóc gia đình – "Chăm cả nhà – Riêng từng người"
+Cải tiến quan trọng:
+Chỉ chia sẻ hồ sơ khi có sự đồng ý riêng của từng người – không tự động chia sẻ giữa các thành viên.
+Hiển thị rõ "người được ủy quyền" và "phạm vi chia sẻ".
+Gợi ý gói chăm sóc gia đình nhưng tôn trọng quyền riêng tư từng cá nhân.
+4.3. Đầu ra giai đoạn 4
+Hồ sơ nguy cơ & kế hoạch phòng bệnh cá nhân hóa
+Lịch nhắc & sàng lọc tự động
+Báo cáo xu hướng sức khỏe định kỳ
+Phân nhóm chăm sóc rõ ràng
+Kế hoạch chăm sóc gia đình (nếu có đồng ý)
+PHẦN II: CÁC PHÂN HỆ CRM CẦN CÓ (CẢI TIẾN)
+STT
+Phân hệ
+Chức năng chính
+Cải tiến thân thiện
+1
+Quản lý khách hàng & Lịch hẹn
+Tiếp nhận đa kênh, phân công, lịch khám & liên hệ
+Lịch thông minh tự động sắp xếp; nhắc đa kênh
+2
+Hồ sơ sức khỏe điện tử
+Bệnh sử, Tứ chẩn, triệu chứng, kết quả, thuốc, dị ứng, tệp đính kèm
+Timeline trực quan; tìm kiếm thông minh; OCR tài liệu
+3
+Recipe / Kế hoạch chăm sóc
+Thư viện mẫu, kế hoạch cá nhân, nhiều đợt, phiên bản, phê duyệt
+Kéo thả can thiệp; thư viện mẫu phong phú; so sánh phiên bản
+4
+Nhật ký & Theo dõi
+Biểu mẫu di động, thang điểm triệu chứng, tuân thủ, phản ứng bất lợi, báo cáo tiến triển
+Nhật ký 1 phút; biểu đồ xu hướng; nhắc thông minh
+5
+Nhắc việc & Cảnh báo
+Lịch dùng, tái khám, quá hạn check-in, triệu chứng bất thường, nhiệm vụ nhân viên
+Cảnh báo phân loại màu; tự động chuyển tuyến; đa kênh
+6
+Giao tiếp chăm sóc
+Ghi chú cuộc gọi/tin nhắn, nội dung tư vấn, việc cần làm, lịch hẹn tiếp
+Lịch sử tương tác đầy đủ; mẫu tin nhắn sẵn; nhắc follow-up
+7
+Báo cáo quản lý
+Số khách mới, tỷ lệ hoàn thiện hồ sơ, theo dõi đúng hạn, tuân thủ, cải thiện mục tiêu, bỏ theo dõi, hài lòng
+Dashboard trực quan; xuất báo cáo 1 click; so sánh kỳ
+8
+AI hỗ trợ
+Tóm tắt hồ sơ, so sánh diễn biến, phát hiện thiếu/trùng, chuẩn bị câu hỏi, soạn nội dung giáo dục đã kiểm duyệt
+Gợi ý thông minh; không tự chẩn đoán; kiểm duyệt nội dung
+9
+Quản trị & Bảo mật
+Phân quyền vai trò, xác thực, mã hóa, nhật ký truy cập, sao lưu, lưu trữ, xử lý sự cố
+Phân quyền linh hoạt; audit trail đầy đủ; tuân thủ pháp luật
+PHẦN III: VAI TRÒ NGƯỜI DÙNG (CẢI TIẾN)
+Vai trò
+Quyền hạn chính
+Cải tiến thân thiện
+Bác sĩ / Người hành nghề có thẩm quyền
+Đánh giá chuyên môn, phê duyệt recipe, xem cảnh báo, quyết định điều chỉnh, kết thúc đợt
+Dashboard chuyên môn; ký số recipe; ghi chú nhanh bằng giọng nói
+Điều dưỡng / Nhân viên CSKH
+Hướng dẫn quy trình đã duyệt, ghi nhận phản hồi, nhắc lịch, chuyển cảnh báo đúng tuyến
+Checklist công việc; mẫu tư vấn sẵn; chuyển cảnh báo 1 click
+Nhà quản lý
+Phân công, theo dõi chất lượng dịch vụ, năng suất, SLA, báo cáo, kiểm tra tuân thủ
+Dashboard tổng quan; báo cáo tự động; cảnh báo KPI
+Khách hàng / Người chăm sóc được ủy quyền
+Cập nhật nhật ký, xem hướng dẫn đã phê duyệt, xác nhận thực hiện, gửi câu hỏi
+App thân thiện; nhật ký 1 phút; nhắc thông minh; giáo dục sức khỏe
+Cải tiến quan trọng:
+Phân quyền theo nguyên tắc "cần biết" (need-to-know) – mỗi người chỉ thấy thông tin cần cho công việc.
+Khách hàng có quyền kiểm soát ai được xem hồ sơ của mình.
+Audit trail đầy đủ – mọi truy cập/chỉnh sửa đều được ghi nhận.
+PHẦN IV: CHỈ SỐ ĐÁNH GIÁ HIỆU QUẢ (CẢI TIẾN)
+Nhóm chỉ số
+Chỉ số cụ thể
+Cải tiến thân thiện
+Hiệu quả tiếp nhận
+Tỷ lệ hồ sơ hoàn chỉnh; thời gian từ tiếp nhận đến đánh giá ban đầu
+Dashboard thời gian thực; mục tiêu rõ ràng
+Hiệu quả lập kế hoạch
+Tỷ lệ kế hoạch có mục tiêu, lịch theo dõi, người phụ trách đầy đủ
+Checklist tự động; cảnh báo thiếu
+Hiệu quả theo dõi
+Tỷ lệ check-in đúng hạn; tỷ lệ tuân thủ; tỷ lệ bỏ theo dõi
+Biểu đồ xu hướng; so sánh kỳ
+Hiệu quả xử lý cảnh báo
+Tỷ lệ khách hàng được xử lý cảnh báo đúng thời gian quy định
+Đo lường SLA; cảnh báo trễ hạn
+Hiệu quả lâm sàng
+Mức thay đổi triệu chứng/chỉ số theo mục tiêu; số lần tái khám đúng hẹn
+So sánh trước-sau; biểu đồ tiến triển
+Hiệu quả trải nghiệm
+Mức hài lòng khách hàng; thời gian xử lý công việc; số lỗi nhập liệu/sai lệch quy trình
+Khảo sát NPS; đo lường thời gian; kiểm tra chất lượng
+Cải tiến: Thêm chỉ số "Tỷ lệ khách hàng chuyển sang giai đoạn chủ động" – đo lường hiệu quả dài hạn của mô hình chăm sóc khép kín.
+PHẦN V: NGUYÊN TẮC AN TOÀN & PHẠM VI SỬ DỤNG (CẢI TIẾN)
+1. Nguyên tắc an toàn cốt lõi
+Nguyên tắc
+Nội dung
+Cải tiến thân thiện
+Công cụ hỗ trợ, không thay thế
+Ứng dụng là công cụ quản lý và hỗ trợ quyết định, không thay thế khám trực tiếp, chẩn đoán, kê đơn hoặc phán đoán chuyên môn
+Hiển thị rõ trên mọi màn hình chính; nhắc nhở định kỳ
+Rà soát tương tác
+Mọi thuốc, thảo dược, thực phẩm bổ sung, phối hợp trị liệu cần được rà soát tương tác, chống chỉ định, chức năng gan thận, thai kỳ, yếu tố nguy cơ
+Cảnh báo tự động; checklist rà soát trước khi duyệt recipe
+Đối tượng đặc biệt
+Bệnh nhân ung thư, hóa trị/xạ trị, ghép tạng, dùng thuốc chống đông/ức chế miễn dịch: không tự thêm/ngừng thảo dược nếu chưa trao đổi với đội ngũ điều trị
+Cảnh báo đỏ đặc biệt; yêu cầu xác nhận của bác sĩ
+Bảo mật dữ liệu
+Dữ liệu sức khỏe là dữ liệu nhạy cảm, cần cơ chế đồng ý, giới hạn quyền truy cập, tuân thủ pháp luật
+Mã hóa end-to-end; phân quyền chặt chẽ; audit trail
+2. Phạm vi sử dụng
+Đối tượng: Bác sĩ, người hành nghề y học cổ truyền, nhân viên chăm sóc sức khỏe, nhà quản lý.
+Mục đích: Quản lý hành trình chăm sóc khép kín – từ tiếp nhận đến phòng bệnh chủ động.
+Giới hạn: Không thay thế khám trực tiếp; không tự động đưa ra chẩn đoán/kê đơn; mọi quyết định chuyên môn thuộc về người có thẩm quyền.
+PHẦN VI: LỘ TRÌNH TRIỂN KHAI ĐỀ XUẤT (CẢI TIẾN)
+Giai đoạn
+Thời gian
+Nội dung chính
+Cải tiến thân thiện
+Giai đoạn 1 – MVP
+2-3 tháng
+Hồ sơ khách hàng, tiếp nhận, bệnh sử, recipe theo đợt, nhật ký theo dõi, nhắc lịch, phân quyền
+Tập trung vào trải nghiệm cốt lõi; thử nghiệm với nhóm nhỏ
+Giai đoạn 2
+2-3 tháng
+Dashboard bác sĩ/CSKH, báo cáo tiến triển, cảnh báo, thư viện biểu mẫu, quy trình xử lý
+Tự động hóa thông minh; cảnh báo phân loại
+Giai đoạn 3
+3-4 tháng
+Cổng khách hàng, tích hợp lịch hẹn/kênh liên lạc, báo cáo quản trị, AI hỗ trợ tổng hợp hồ sơ
+App khách hàng thân thiện; AI hỗ trợ không thay thế
+Giai đoạn 4
+1-2 tháng
+Thử nghiệm nhóm nhỏ; rà soát an toàn, dễ dùng, bảo mật, độ chính xác dữ liệu trước khi mở rộng
+Kiểm thử với người dùng thực; thu thập phản hồi; tinh chỉnh
+Định hướng cốt lõi:
+MỘT HỒ SƠ – MỘT KẾ HOẠCH – MỘT DÒNG THEO DÕI – MỘT HÀNH TRÌNH CHĂM SÓC LIÊN TỤC
+PHẦN VII: TÓM TẮT CẢI TIẾN THEN CHỐT
+STT
+Cải tiến
+Lợi ích
+1
+6 thẻ thông minh thay vì form dài
+Giảm tải nhập liệu; dễ theo dõi tiến độ
+2
+Timeline trực quan xuyên suốt
+Nhìn thấy hành trình; dễ phát hiện bất thường
+3
+Nhật ký 1 phút trên mobile
+Tăng tuân thủ; giảm gánh nặng cho khách hàng
+4
+Dashboard ưu tiên phân loại màu
+Nhân viên biết ngay việc cần làm; không bỏ sót
+5
+Thư viện mẫu (recipe, thực đơn, bài tập)
+Giảm thời gian lập kế hoạch; chuẩn hóa chất lượng
+6
+Cảnh báo thông minh đa kênh
+Xử lý kịp thời; giảm rủi ro
+7
+AI hỗ trợ có kiểm duyệt
+Tăng hiệu quả; không thay thế chuyên môn
+8
+Phân quyền linh hoạt + audit trail
+Bảo mật; tuân thủ pháp luật
+9
+Giao diện thân thiện với ngôn ngữ gần gũi
+Tăng trải nghiệm người dùng; giảm đào tạo
+10
+Chăm sóc gia đình có đồng ý riêng
+Tôn trọng quyền riêng tư; mở rộng phạm vi
+Kết luận: Đề cương cải tiến này giữ nguyên triết lý cốt lõi của đề xuất ban đầu – "Một hồ sơ – Một kế hoạch – Một dòng theo dõi – Một hành trình chăm sóc liên tục" – nhưng nâng cấp mạnh mẽ về trải nghiệm người dùng, tính trực quan, tự động hóa thông minh và an toàn dữ liệu, giúp ứng dụng thực sự trở thành "người bạn đồng hành số" thân thiện, tiện lợi và đáng tin cậy cho cả bác sĩ, nhân viên chăm sóc và khách hàng.

@@ -1,0 +1,2847 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediCRM Khép Kín – Người Bạn Đồng Hành Số Cho Y Bác Sĩ</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            },
+            medical: {
+              blue: '#0284c7',
+              navy: '#0f172a',
+              amber: '#d97706',
+              rose: '#e11d48',
+              emerald: '#059669',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .badge-pulse {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.05); }
+    }
+    @media print {
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      body { background: white !important; color: black !important; font-size: 11pt; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- ================= TOP NOTIFICATION / SAFETY DISCLAIMER ================= -->
+  <div class="bg-teal-900 text-teal-100 text-xs px-4 py-1.5 flex justify-between items-center no-print">
+    <div class="flex items-center space-x-2">
+      <span class="bg-teal-700 text-teal-200 px-2 py-0.5 rounded font-bold tracking-wide uppercase text-[10px]">Tiêu chuẩn an toàn y khoa</span>
+      <span>Công cụ hỗ trợ ra quyết định & quản trị hành trình – Quyết định chuyên môn thuộc về người hành nghề y tế có thẩm quyền.</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="flex items-center"><i class="fa-solid fa-phone-volume text-rose-400 mr-1.5"></i> Cấp cứu: <b>115</b></span>
+      <span class="hidden md:inline text-teal-300">|</span>
+      <span class="hidden md:inline"><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Dữ liệu bảo mật tuân thủ Luật KCB</span>
+    </div>
+  </div>
+
+  <!-- ================= MAIN HEADER & ROLE SWITCHER ================= -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <!-- Logo & Branding -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
+            <i class="fa-solid fa-heart-pulse text-xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h1 class="font-extrabold text-lg text-slate-900 tracking-tight">MediCRM <span class="text-teal-600 font-bold">Khép Kín</span></h1>
+              <span class="bg-teal-100 text-teal-800 text-[11px] font-semibold px-2 py-0.5 rounded-full">3 Dễ - 3 Nhanh - 3 An Tâm</span>
+            </div>
+            <p class="text-xs text-slate-500">Một Hồ Sơ • Một Kế Hoạch • Một Dòng Theo Dõi • Chăm Sóc Liên Tục</p>
+          </div>
+        </div>
+
+        <!-- Global Search Bar -->
+        <div class="hidden md:flex flex-1 max-w-md mx-6">
+          <div class="relative w-full">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </div>
+            <input type="text" id="globalSearchInput" onkeyup="handleGlobalSearch(event)"
+              placeholder="Tìm bệnh nhân theo tên, mã BN (BN-2026-...), SĐT, bệnh lý..."
+              class="w-full pl-9 pr-20 py-2 text-sm bg-slate-100/80 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+            <div class="absolute inset-y-0 right-0 pr-2 flex items-center">
+              <kbd class="text-[10px] text-slate-400 bg-white border border-slate-200 rounded px-1.5 py-0.5 shadow-xs">Ctrl+K</kbd>
+            </div>
+          </div>
+        </div>
+
+        <!-- Role Selector & Actions -->
+        <div class="flex items-center space-x-3">
+          <!-- Role Switcher -->
+          <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+            <span class="text-xs font-medium text-slate-500 px-2 hidden lg:inline"><i class="fa-solid fa-user-tag mr-1"></i>Vai trò:</span>
+            <select id="currentRoleSelect" onchange="changeRole(this.value)" class="text-xs font-semibold bg-white border-0 rounded-lg px-2.5 py-1.5 text-slate-700 shadow-sm focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer">
+              <option value="doctor">👨‍⚕️ Bác sĩ điều trị</option>
+              <option value="nurse">👩‍⚕️ Điều dưỡng / CSKH</option>
+              <option value="manager">🏢 Quản lý phòng khám</option>
+              <option value="patient">👤 Khách hàng (Mobile view)</option>
+            </select>
+          </div>
+
+          <!-- Quick Actions Button -->
+          <button onclick="openNewPatientModal()" class="inline-flex items-center px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-lg shadow-sm shadow-teal-600/30 transition-all">
+            <i class="fa-solid fa-user-plus mr-1.5"></i> Tiếp nhận mới
+          </button>
+
+          <!-- Data Tools -->
+          <div class="relative group">
+            <button class="w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-all" title="Sao lưu & Dữ liệu">
+              <i class="fa-solid fa-database text-sm"></i>
+            </button>
+            <div class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-slate-100 py-1.5 hidden group-hover:block z-50">
+              <a href="javascript:void(0)" onclick="exportDataJson()" class="flex items-center px-4 py-2 text-xs text-slate-700 hover:bg-teal-50 hover:text-teal-700">
+                <i class="fa-solid fa-file-export w-5 text-slate-400"></i> Xuất dữ liệu (JSON)
+              </a>
+              <label class="flex items-center px-4 py-2 text-xs text-slate-700 hover:bg-teal-50 hover:text-teal-700 cursor-pointer">
+                <i class="fa-solid fa-file-import w-5 text-slate-400"></i> Nhập dữ liệu (JSON)
+                <input type="file" id="importJsonInput" accept=".json" onchange="importDataJson(event)" class="hidden">
+              </label>
+              <div class="border-t border-slate-100 my-1"></div>
+              <a href="javascript:void(0)" onclick="resetDemoData()" class="flex items-center px-4 py-2 text-xs text-rose-600 hover:bg-rose-50">
+                <i class="fa-solid fa-rotate-left w-5 text-rose-400"></i> Khôi phục mẫu ban đầu
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= SUB-NAVIGATION: 4 GIAI ĐOẠN KHÉP KÍN ================= -->
+  <nav class="bg-white border-b border-slate-200 shadow-xs no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex overflow-x-auto space-x-1 py-2 custom-scrollbar">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn flex items-center px-3.5 py-2 text-xs font-bold rounded-lg transition-all text-teal-700 bg-teal-50">
+          <i class="fa-solid fa-chart-pie mr-2"></i> Bảng điều khiển ưu tiên
+          <span id="badgeUrgentAlerts" class="ml-2 bg-rose-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold badge-pulse">3</span>
+        </button>
+
+        <button onclick="switchTab('patients')" id="nav-patients" class="tab-btn flex items-center px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all">
+          <i class="fa-solid fa-users mr-2 text-slate-400"></i> Danh sách bệnh nhân
+          <span id="badgeTotalPatients" class="ml-1.5 bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.2 rounded-full font-medium">4</span>
+        </button>
+
+        <div class="h-6 w-px bg-slate-200 my-auto mx-1"></div>
+
+        <!-- 4 Giai đoạn khép kín -->
+        <button onclick="switchTab('phase1')" id="nav-phase1" class="tab-btn flex items-center px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all">
+          <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center justify-center mr-2">1</span>
+          Tiếp nhận & Đánh giá
+          <span class="text-[10px] text-slate-400 ml-1">("Hiểu đúng")</span>
+        </button>
+
+        <button onclick="switchTab('phase2')" id="nav-phase2" class="tab-btn flex items-center px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all">
+          <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold flex items-center justify-center mr-2">2</span>
+          Lập Kế hoạch / Recipe
+          <span class="text-[10px] text-slate-400 ml-1">("Lên đường")</span>
+        </button>
+
+        <button onclick="switchTab('phase3')" id="nav-phase3" class="tab-btn flex items-center px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all">
+          <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold flex items-center justify-center mr-2">3</span>
+          Theo dõi & Điều chỉnh
+          <span class="text-[10px] text-slate-400 ml-1">("Đúng hướng")</span>
+        </button>
+
+        <button onclick="switchTab('phase4')" id="nav-phase4" class="tab-btn flex items-center px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all">
+          <span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold flex items-center justify-center mr-2">4</span>
+          Vườn Sức Khỏe & Phòng Bệnh
+          <span class="text-[10px] text-slate-400 ml-1">("Sống khỏe")</span>
+        </button>
+
+        <div class="h-6 w-px bg-slate-200 my-auto mx-1"></div>
+
+        <button onclick="switchTab('ai_copilot')" id="nav-ai_copilot" class="tab-btn flex items-center px-3.5 py-2 text-xs font-semibold text-purple-700 hover:bg-purple-50 rounded-lg transition-all">
+          <i class="fa-solid fa-wand-magic-sparkles mr-2 text-purple-500"></i> Trợ lý AI Lâm Sàng
+        </button>
+
+        <button onclick="switchTab('reports')" id="nav-reports" class="tab-btn flex items-center px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all">
+          <i class="fa-solid fa-chart-line mr-2 text-slate-400"></i> Báo cáo & KPI
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= ACTIVE PATIENT CONTEXT STRIP ================= -->
+  <div id="activePatientBanner" class="bg-gradient-to-r from-slate-900 via-slate-800 to-teal-950 text-white px-4 py-2.5 shadow-inner no-print">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div id="patientAvatarCircle" class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center font-bold text-base shadow">
+          NA
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span id="activePatientName" class="font-bold text-sm tracking-wide">Nguyễn Văn An</span>
+            <span id="activePatientCode" class="text-xs bg-teal-800/80 text-teal-200 px-2 py-0.5 rounded font-mono">BN-2026-001</span>
+            <span id="activePatientStageBadge" class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full font-medium">Giai đoạn 3: Theo dõi</span>
+            <span id="activePatientRiskBadge" class="text-xs bg-rose-500/30 text-rose-300 border border-rose-500/40 px-2 py-0.5 rounded-full font-semibold">Ưu tiên cao</span>
+          </div>
+          <div class="text-xs text-slate-300 flex items-center space-x-4 mt-0.5">
+            <span><i class="fa-solid fa-venus-mars text-slate-400 mr-1"></i><span id="activePatientMeta">Nam, 52 tuổi</span></span>
+            <span><i class="fa-solid fa-phone text-slate-400 mr-1"></i><span id="activePatientPhone">0912.345.678</span></span>
+            <span><i class="fa-solid fa-notes-medical text-teal-400 mr-1"></i>Vấn đề: <b id="activePatientPrimaryIssue" class="text-teal-200">Mất ngủ mãn tính, Đau thắt lưng</b></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Switch Patient & Patient Actions -->
+      <div class="flex items-center space-x-2">
+        <select id="patientQuickSelect" onchange="switchActivePatient(this.value)" class="bg-slate-800 border border-slate-700 text-xs rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:ring-1 focus:ring-teal-500">
+          <!-- Populated by JS -->
+        </select>
+        <button onclick="openPatientSafetyCard()" class="text-xs bg-rose-600 hover:bg-rose-700 text-white font-medium px-2.5 py-1.5 rounded-lg flex items-center shadow-xs">
+          <i class="fa-solid fa-shield-virus mr-1.5"></i> Thẻ an toàn
+        </button>
+        <button onclick="printPatientSummary()" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-100 font-medium px-2.5 py-1.5 rounded-lg flex items-center">
+          <i class="fa-solid fa-print mr-1.5"></i> In 1 trang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN CONTENT WRAPPER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- ---------------- SECTION 1: DASHBOARD ƯU TIÊN ---------------- -->
+    <div id="tab-dashboard" class="tab-content space-y-6">
+      <!-- 4 Top KPI Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tổng hồ sơ quản lý</p>
+            <h3 id="statTotalPatients" class="text-2xl font-bold text-slate-900 mt-1">4</h3>
+            <p class="text-xs text-emerald-600 mt-1"><i class="fa-solid fa-arrow-trend-up mr-1"></i>100% có mã định danh</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-id-card-clip"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Đang trong Recipe điều trị</p>
+            <h3 id="statActiveRecipe" class="text-2xl font-bold text-slate-900 mt-1">2</h3>
+            <p class="text-xs text-teal-600 mt-1"><i class="fa-solid fa-check-double mr-1"></i>Giai đoạn 2 & 3</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-clipboard-check"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Vườn sức khỏe (Giai đoạn 4)</p>
+            <h3 id="statGardenCount" class="text-2xl font-bold text-slate-900 mt-1">1</h3>
+            <p class="text-xs text-indigo-600 mt-1"><i class="fa-solid fa-seedling mr-1"></i>Duy trì & phòng bệnh</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-heart-circle-check"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-xs flex items-center justify-between bg-rose-50/30">
+          <div>
+            <p class="text-xs font-bold text-rose-600 uppercase tracking-wider">Cảnh báo khẩn cần xử lý</p>
+            <h3 id="statAlertCount" class="text-2xl font-black text-rose-600 mt-1">3</h3>
+            <p class="text-xs text-rose-500 mt-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>SLA xử lý &lt; 30 phút</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl badge-pulse">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- BẢNG ĐIỀU KHIỂN ƯU TIÊN 3 MÀU: ĐỎ - VÀNG - XANH (Document Requirement 3.3.B) -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/70 flex flex-wrap justify-between items-center gap-2">
+          <div>
+            <h2 class="text-base font-bold text-slate-900 flex items-center">
+              <i class="fa-solid fa-layer-group text-teal-600 mr-2"></i> Bảng Điều Khiển Ưu Tiên CSKH & Bác Sĩ (Triage Dashboard)
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Phân loại tự động theo ngưỡng nguy cơ, nhịp theo dõi và phản hồi lâm sàng tức thì</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-slate-500">Cập nhật: <b id="dashboardLiveTime">Hôm nay</b></span>
+            <button onclick="refreshDashboardAlerts()" class="text-xs px-2.5 py-1 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg text-slate-600 shadow-xs">
+              <i class="fa-solid fa-arrows-rotate mr-1"></i> Làm mới
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6 space-y-6">
+          <!-- 1. HÀNG ĐỎ: CẦN XỬ LÝ NGAY -->
+          <div class="border border-rose-200 rounded-xl bg-rose-50/40 p-4">
+            <div class="flex items-center justify-between pb-3 border-b border-rose-200">
+              <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-rose-600 inline-block badge-pulse"></span>
+                <h3 class="text-sm font-bold text-rose-900 uppercase tracking-wide">
+                  🔴 CẦN XỬ LÝ NGAY (<span id="countRedAlerts">3</span> trường hợp)
+                </h3>
+              </div>
+              <span class="text-xs font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded">Ưu tiên mức độ 1</span>
+            </div>
+            <div id="redAlertsList" class="mt-3 space-y-2.5">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- 2. HÀNG VÀNG: ĐẾN HẠN LIÊN HỆ -->
+          <div class="border border-amber-200 rounded-xl bg-amber-50/40 p-4">
+            <div class="flex items-center justify-between pb-3 border-b border-amber-200">
+              <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                <h3 class="text-sm font-bold text-amber-900 uppercase tracking-wide">
+                  🟡 ĐẾN HẠN LIÊN HỆ (<span id="countYellowAlerts">5</span> khách hàng)
+                </h3>
+              </div>
+              <span class="text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">Theo dõi định kỳ</span>
+            </div>
+            <div id="yellowAlertsList" class="mt-3 space-y-2.5">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- 3. HÀNG XANH: ĐANG ỔN ĐỊNH -->
+          <div class="border border-emerald-200 rounded-xl bg-emerald-50/40 p-4">
+            <div class="flex items-center justify-between pb-3 border-b border-emerald-200">
+              <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                <h3 class="text-sm font-bold text-emerald-900 uppercase tracking-wide">
+                  🟢 ĐANG ỔN ĐỊNH (<span id="countGreenAlerts">12</span> khách hàng)
+                </h3>
+              </div>
+              <span class="text-xs font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Tiến triển tốt</span>
+            </div>
+            <p class="text-xs text-emerald-800 mt-2">
+              <i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i>
+              Các bệnh nhân tuân thủ kế hoạch trên 85%, các chỉ số đau và giấc ngủ cải thiện rõ rệt, không có tác dụng phụ hoặc tương tác nguy hiểm.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Health Journey Flow Diagram -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 flex items-center">
+          <i class="fa-solid fa-route text-teal-600 mr-2"></i> Bản Đồ Hành Trình Chăm Sóc Sức Khỏe Khép Kín (4 Trạm Dừng)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl relative">
+            <span class="absolute top-2 right-2 text-xs font-bold text-blue-400">GĐ 1</span>
+            <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm mb-2">1</div>
+            <h4 class="font-bold text-blue-950 text-sm">Tiếp nhận & Đánh giá</h4>
+            <p class="text-xs text-blue-800 font-medium italic mt-0.5">"Hiểu đúng để chăm đúng"</p>
+            <ul class="text-[11px] text-blue-900 mt-2 space-y-1">
+              <li>• 6 thẻ thông minh</li>
+              <li>• Bản đồ cơ thể tương tác</li>
+              <li>• Tứ chẩn YHCT & 7 trục sống</li>
+            </ul>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl relative">
+            <span class="absolute top-2 right-2 text-xs font-bold text-amber-400">GĐ 2</span>
+            <div class="w-8 h-8 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-sm mb-2">2</div>
+            <h4 class="font-bold text-amber-950 text-sm">Lập Recipe / Kế hoạch</h4>
+            <p class="text-xs text-amber-800 font-medium italic mt-0.5">"Lên đường đúng"</p>
+            <ul class="text-[11px] text-amber-900 mt-2 space-y-1">
+              <li>• 5 nhóm can thiệp cá nhân</li>
+              <li>• Phân chia đợt linh hoạt</li>
+              <li>• Thẻ an toàn phòng ngừa</li>
+            </ul>
+          </div>
+
+          <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl relative">
+            <span class="absolute top-2 right-2 text-xs font-bold text-emerald-400">GĐ 3</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm mb-2">3</div>
+            <h4 class="font-bold text-emerald-950 text-sm">Theo dõi & Điều chỉnh</h4>
+            <p class="text-xs text-emerald-800 font-medium italic mt-0.5">"Đi đúng hướng"</p>
+            <ul class="text-[11px] text-emerald-900 mt-2 space-y-1">
+              <li>• Health Timeline trực quan</li>
+              <li>• Thẻ nhật ký 1 phút Mobile</li>
+              <li>• Đánh giá cuối đợt linh hoạt</li>
+            </ul>
+          </div>
+
+          <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl relative">
+            <span class="absolute top-2 right-2 text-xs font-bold text-indigo-400">GĐ 4</span>
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm mb-2">4</div>
+            <h4 class="font-bold text-indigo-950 text-sm">Vườn Sức Khỏe Duy Trì</h4>
+            <p class="text-xs text-indigo-800 font-medium italic mt-0.5">"Sống khỏe bền vững"</p>
+            <ul class="text-[11px] text-indigo-900 mt-2 space-y-1">
+              <li>• Hồ sơ nguy cơ & tầm soát</li>
+              <li>• Theo dõi chuỗi streak lành mạnh</li>
+              <li>• Biểu đồ xu hướng sức khỏe</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------------- SECTION 2: DANH SÁCH BỆNH NHÂN ---------------- -->
+    <div id="tab-patients" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Danh Sách Bệnh Nhân & Hồ Sơ Điện Tử</h2>
+            <p class="text-xs text-slate-500">Quản lý xuyên suốt theo nguyên tắc: Một Hồ Sơ - Một Kế Hoạch - Một Dòng Theo Dõi</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <!-- Filter by Stage -->
+            <select id="filterStageSelect" onchange="filterPatientsList()" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700">
+              <option value="all">Tất cả giai đoạn</option>
+              <option value="1">GĐ 1: Tiếp nhận</option>
+              <option value="2">GĐ 2: Lập Recipe</option>
+              <option value="3">GĐ 3: Đang theo dõi</option>
+              <option value="4">GĐ 4: Vườn sức khỏe</option>
+            </select>
+            <button onclick="openNewPatientModal()" class="text-xs px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-xs">
+              <i class="fa-solid fa-plus mr-1"></i> Thêm hồ sơ
+            </button>
+          </div>
+        </div>
+
+        <!-- Patients Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-600">
+            <thead class="bg-slate-50 text-[11px] uppercase font-bold text-slate-500 tracking-wider border-y border-slate-200">
+              <tr>
+                <th class="py-3 px-4">Bệnh nhân / Mã BN</th>
+                <th class="py-3 px-3">Tuổi/Giới</th>
+                <th class="py-3 px-3">Vấn đề ưu tiên</th>
+                <th class="py-3 px-3">Giai đoạn</th>
+                <th class="py-3 px-3">Mức ưu tiên</th>
+                <th class="py-3 px-3">Tuân thủ</th>
+                <th class="py-3 px-3">Cập nhật cuối</th>
+                <th class="py-3 px-4 text-right">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="patientsTableBody" class="divide-y divide-slate-100">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------------- SECTION 3: GIAI ĐOẠN 1 - TIẾP NHẬN & 6 THẺ THÔNG MINH ---------------- -->
+    <div id="tab-phase1" class="tab-content hidden space-y-6">
+      <!-- Header of Phase 1 with Smart Progress Bar (Doc 1.1) -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-0.5 rounded-full">GIAI ĐOẠN 1</span>
+              <h2 class="text-lg font-bold text-slate-900">Tiếp Nhận, Đánh Giá & Lập Hồ Sơ Sức Khỏe</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Khẩu hiệu: <b class="text-blue-700 italic">"Hiểu đúng để chăm đúng"</b> — 6 thẻ thông minh mở rộng linh hoạt, không cần form 10 trang khô khan</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button onclick="simulateVoiceDictation()" class="text-xs px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg border border-slate-200 flex items-center">
+              <i class="fa-solid fa-microphone text-rose-500 mr-1.5"></i> Nhập nhanh bằng giọng nói
+            </button>
+            <button onclick="saveCurrentPatientPhase1()" class="text-xs px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-xs flex items-center">
+              <i class="fa-solid fa-floppy-disk mr-1.5"></i> Lưu hồ sơ GĐ 1
+            </button>
+            <button onclick="advanceToPhase2()" class="text-xs px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-xs flex items-center">
+              Chuyển sang Giai đoạn 2 <i class="fa-solid fa-arrow-right ml-1.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Smart Progress Bar -->
+        <div class="mt-4 pt-4 border-t border-slate-100">
+          <div class="flex justify-between items-center text-xs mb-1.5">
+            <span class="font-semibold text-slate-700">Tiến độ hoàn thiện hồ sơ:</span>
+            <span id="phase1ProgressText" class="font-bold text-teal-700">85% Hoàn thành</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+            <div id="phase1ProgressBar" class="bg-gradient-to-r from-teal-500 to-emerald-500 h-3 rounded-full transition-all duration-500" style="width: 85%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 SMART CARDS ACCORDION/GRID -->
+      <div class="space-y-4">
+        <!-- THẺ 1: Thông tin cá nhân & Nhu cầu -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div onclick="toggleCard('card1')" class="px-6 py-4 bg-slate-50/70 hover:bg-slate-100/60 cursor-pointer flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <span class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center text-xs font-bold">1</span>
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Thẻ 1: Thông tin cá nhân & Nhu cầu – <span class="italic font-normal text-slate-500">"Biết ai, biết mong gì"</span></h3>
+                <p class="text-[11px] text-slate-500">Định danh tự động, người đồng hành, mức độ ưu tiên & câu chuyện khách hàng</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded"><i class="fa-solid fa-circle-check mr-1"></i>Đã hoàn thành</span>
+              <i id="icon-card1" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform"></i>
+            </div>
+          </div>
+          <div id="content-card1" class="p-6 border-t border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div>
+              <label class="font-bold text-slate-700">Họ và tên bệnh nhân</label>
+              <input type="text" id="p1_name" class="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs" value="Nguyễn Văn An">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Mã hồ sơ (Tự sinh)</label>
+              <input type="text" id="p1_code" class="w-full mt-1 p-2 bg-slate-100 border border-slate-200 rounded-lg text-xs font-mono font-bold text-teal-800" value="BN-2026-001" readonly>
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Số CCCD / Định danh</label>
+              <div class="flex space-x-1 mt-1">
+                <input type="text" id="p1_cccd" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs" value="001072008899">
+                <button onclick="alert('Đã quét CCCD thành công qua đầu đọc QR!')" class="px-2.5 py-1 bg-slate-200 text-slate-700 rounded-lg text-xs" title="Quét QR CCCD"><i class="fa-solid fa-qrcode"></i></button>
+              </div>
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Ngày sinh & Giới tính</label>
+              <div class="grid grid-cols-2 gap-2 mt-1">
+                <input type="text" id="p1_dob" class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs" value="15/08/1974">
+                <select id="p1_gender" class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                  <option value="Nam">Nam</option>
+                  <option value="Nữ">Nữ</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Số điện thoại & Địa chỉ</label>
+              <input type="text" id="p1_phone" class="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs" value="0912.345.678 - Q. Cầu Giấy, Hà Nội">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Người đồng hành / Khẩn cấp</label>
+              <input type="text" id="p1_contact" class="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs" value="Trần Thị Lan (Vợ) - 0988.777.666 (Được ủy quyền)">
+            </div>
+            <div class="md:col-span-3">
+              <label class="font-bold text-slate-700">Mức độ ưu tiên nhu cầu (1 - 5 Sao)</label>
+              <div class="flex items-center space-x-4 mt-1">
+                <div class="flex text-amber-400 text-base space-x-1">
+                  <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                </div>
+                <span class="text-slate-600 font-medium">4.5/5 — Cần cải thiện giấc ngủ & giảm đau thắt lưng gấp để đi làm việc</span>
+              </div>
+            </div>
+            <div class="md:col-span-3">
+              <label class="font-bold text-slate-700 flex items-center">
+                <i class="fa-solid fa-book-open-reader text-teal-600 mr-1.5"></i> Câu chuyện của khách hàng (Ô ghi chú tự do cho bác sĩ cá nhân hóa kế hoạch)
+              </label>
+              <textarea id="p1_story" rows="2" class="w-full mt-1 p-2.5 bg-amber-50/40 border border-amber-200 rounded-lg text-xs text-slate-700">Bệnh nhân làm kiến trúc sư, thường xuyên thức khuya thiết kế bản vẽ và ngồi lâu trước máy tính. 6 tháng nay mất ngủ trầm trọng, thức trắng hoặc chỉ ngủ được 3 tiếng chập chờn, kèm đau mỏi thắt lưng lan xuống mông. Mong muốn không phải lạm dụng thuốc an thần hóa dược.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- THẺ 2: Bệnh sử & Hồ sơ lâm sàng + Bản đồ cơ thể tương tác (Doc 1.2) -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div onclick="toggleCard('card2')" class="px-6 py-4 bg-slate-50/70 hover:bg-slate-100/60 cursor-pointer flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <span class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center text-xs font-bold">2</span>
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Thẻ 2: Bệnh sử & Hồ sơ lâm sàng – <span class="italic font-normal text-slate-500">"Hiểu bệnh, hiểu người"</span></h3>
+                <p class="text-[11px] text-slate-500">Bản đồ cơ thể tương tác, thang điểm đau 0-10, sinh tồn tự động tính BMI & cảnh báo</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded"><i class="fa-solid fa-circle-check mr-1"></i>Đã khám</span>
+              <i id="icon-card2" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform"></i>
+            </div>
+          </div>
+          <div id="content-card2" class="p-6 border-t border-slate-100 space-y-6">
+            <!-- Row: Body map & Pain score + Vital signs -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <!-- Body Map Interactive (Cols 5) -->
+              <div class="lg:col-span-5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div class="flex justify-between items-center mb-2">
+                  <h4 class="text-xs font-bold text-slate-800 flex items-center">
+                    <i class="fa-solid fa-child-reaching text-teal-600 mr-1.5"></i> Bản Đồ Cơ Thể Tương Tác (Click chọn vị trí đau)
+                  </h4>
+                  <span id="selectedBodyPartText" class="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">Vị trí: Thắt lưng</span>
+                </div>
+                <!-- Interactive Body Map Container -->
+                <div class="relative w-full h-56 bg-white rounded-lg border border-slate-200 flex items-center justify-center overflow-hidden">
+                  <!-- Visual human body SVG representation -->
+                  <svg class="h-52 w-auto" viewBox="0 0 200 400">
+                    <!-- Head -->
+                    <circle cx="100" cy="40" r="24" fill="#cbd5e1" class="cursor-pointer hover:fill-teal-300 transition-colors" onclick="selectBodyPart('Đầu / Vùng trán chẩm', 4)"/>
+                    <text x="100" y="44" font-size="9" text-anchor="middle" fill="#475569">Đầu</text>
+                    <!-- Neck -->
+                    <rect x="92" y="66" width="16" height="12" fill="#cbd5e1" class="cursor-pointer hover:fill-teal-300" onclick="selectBodyPart('Cổ vai gáy', 5)"/>
+                    <!-- Chest -->
+                    <rect x="70" y="80" width="60" height="40" rx="6" fill="#cbd5e1" class="cursor-pointer hover:fill-teal-300" onclick="selectBodyPart('Ngực / Tim mạch', 2)"/>
+                    <text x="100" y="104" font-size="9" text-anchor="middle" fill="#475569">Ngực</text>
+                    <!-- Abdomen -->
+                    <rect x="73" y="123" width="54" height="35" rx="5" fill="#cbd5e1" class="cursor-pointer hover:fill-teal-300" onclick="selectBodyPart('Vùng bụng / Tiêu hóa', 3)"/>
+                    <text x="100" y="144" font-size="9" text-anchor="middle" fill="#475569">Bụng</text>
+                    <!-- Lumbar / Lower back (Highlighted with Red) -->
+                    <rect id="bodypart-lumbar" x="70" y="161" width="60" height="30" rx="5" fill="#f43f5e" class="cursor-pointer transition-all animate-pulse" onclick="selectBodyPart('Thắt lưng / Cột sống thắt lưng', 6)"/>
+                    <text x="100" y="180" font-size="9" text-anchor="middle" fill="white" font-weight="bold">Thắt lưng ★</text>
+                    <!-- Arms -->
+                    <rect x="42" y="82" width="22" height="95" rx="8" fill="#cbd5e1" class="cursor-pointer hover:fill-teal-300" onclick="selectBodyPart('Tay trái', 1)"/>
+                    <rect x="136" y="82" width="22" height="95" rx="8" fill="#cbd5e1" class="cursor-pointer hover:fill-teal-300" onclick="selectBodyPart('Tay phải', 1)"/>
+                    <!-- Legs & Knees -->
+                    <rect x="68" y="196" width="26" height="180" rx="8" fill="#cbd5e1" class="cursor-pointer hover:fill-teal-300" onclick="selectBodyPart('Chi dưới / Khớp gối trái', 3)"/>
+                    <rect x="106" y="196" width="26" height="180" rx="8" fill="#cbd5e1" class="cursor-pointer hover:fill-teal-300" onclick="selectBodyPart('Chi dưới / Khớp gối phải', 3)"/>
+                    <text x="81" y="270" font-size="8" text-anchor="middle" fill="#475569">Gối T</text>
+                    <text x="119" y="270" font-size="8" text-anchor="middle" fill="#475569">Gối P</text>
+                  </svg>
+                </div>
+                <!-- Pain Scale Slider (VAS 0-10) -->
+                <div class="mt-3">
+                  <div class="flex justify-between text-xs font-semibold text-slate-700">
+                    <span>Thang điểm đau (VAS):</span>
+                    <span id="painScoreValue" class="text-rose-600 font-bold text-sm">6 / 10 (Đau vừa - khó chịu)</span>
+                  </div>
+                  <input type="range" id="painSlider" min="0" max="10" value="6" oninput="updatePainScore(this.value)"
+                    class="w-full mt-2 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-rose-600">
+                  <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                    <span>0: Không đau</span>
+                    <span>5: Trung bình</span>
+                    <span>10: Dữ dội nhất</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Vital signs with Auto BMI & Alerts (Cols 7) -->
+              <div class="lg:col-span-7 space-y-4">
+                <div class="flex justify-between items-center">
+                  <h4 class="text-xs font-bold text-slate-800 flex items-center">
+                    <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Dấu Hiệu Sinh Tồn & Chỉ Số Khám
+                  </h4>
+                  <button onclick="compareWithPreviousExam()" class="text-[11px] font-semibold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200 hover:bg-teal-100">
+                    <i class="fa-solid fa-code-compare mr-1"></i> So sánh với lần khám trước
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                  <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                    <span class="text-slate-500 block text-[11px]">Huyết áp (mmHg)</span>
+                    <input type="text" id="vital_bp" value="135/85" onchange="checkVitalsAlert()" class="font-bold text-slate-800 bg-transparent w-full mt-0.5 focus:outline-none">
+                    <span class="text-[10px] text-amber-600 font-medium"><i class="fa-solid fa-circle-exclamation mr-1"></i>Tiền tăng HA</span>
+                  </div>
+
+                  <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                    <span class="text-slate-500 block text-[11px]">Nhịp tim (lần/phút)</span>
+                    <input type="number" id="vital_hr" value="76" class="font-bold text-slate-800 bg-transparent w-full mt-0.5 focus:outline-none">
+                    <span class="text-[10px] text-emerald-600 font-medium">Bình thường</span>
+                  </div>
+
+                  <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                    <span class="text-slate-500 block text-[11px]">Thân nhiệt (°C)</span>
+                    <input type="number" step="0.1" id="vital_temp" value="36.7" class="font-bold text-slate-800 bg-transparent w-full mt-0.5 focus:outline-none">
+                    <span class="text-[10px] text-emerald-600 font-medium">Bình thường</span>
+                  </div>
+
+                  <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                    <span class="text-slate-500 block text-[11px]">Chiều cao (cm)</span>
+                    <input type="number" id="vital_height" value="168" oninput="calculateBmiAuto()" class="font-bold text-slate-800 bg-transparent w-full mt-0.5 focus:outline-none">
+                  </div>
+
+                  <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                    <span class="text-slate-500 block text-[11px]">Cân nặng (kg)</span>
+                    <input type="number" id="vital_weight" value="72" oninput="calculateBmiAuto()" class="font-bold text-slate-800 bg-transparent w-full mt-0.5 focus:outline-none">
+                  </div>
+
+                  <div class="p-2.5 bg-teal-50 border border-teal-200 rounded-lg">
+                    <span class="text-teal-700 block text-[11px] font-bold">Chỉ số BMI (Tự động)</span>
+                    <div id="vital_bmi_display" class="font-black text-teal-900 text-sm mt-0.5">25.5 kg/m²</div>
+                    <span id="vital_bmi_status" class="text-[10px] text-amber-700 font-semibold">Hơi thừa cân (Tiền béo phì)</span>
+                  </div>
+                </div>
+
+                <!-- ICD-10 suggestions & Diagnosis -->
+                <div class="text-xs">
+                  <label class="font-bold text-slate-700">Chẩn đoán sơ bộ & Mã gợi ý ICD-10</label>
+                  <div class="flex flex-wrap gap-1.5 mt-1.5">
+                    <span class="bg-blue-50 text-blue-800 border border-blue-200 px-2 py-1 rounded text-[11px] font-semibold">G47.0 - Rối loạn bắt đầu và duy trì giấc ngủ [Mất ngủ]</span>
+                    <span class="bg-blue-50 text-blue-800 border border-blue-200 px-2 py-1 rounded text-[11px] font-semibold">M54.5 - Đau thắt lưng mạn</span>
+                    <span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-[11px] cursor-pointer hover:bg-slate-200" onclick="alert('Đã thêm ICD-10: F41.2')">+ F41.2 Rối loạn lo âu</span>
+                  </div>
+                </div>
+
+                <!-- Dị ứng & An toàn (Red Alert) -->
+                <div class="bg-rose-50 border border-rose-200 p-3 rounded-xl flex items-start space-x-3 text-xs">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-600 text-base mt-0.5"></i>
+                  <div class="flex-1">
+                    <span class="font-bold text-rose-900">Cảnh báo an toàn dị ứng & Chống chỉ định:</span>
+                    <p class="text-rose-800 mt-0.5">Dị ứng kháng sinh nhóm <b>Penicillin</b> (Nổi mề đay, khó thở). Không có tiền sử loét dạ dày tiến triển.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- THẺ 3: Tứ chẩn & Đánh giá YHCT (Doc 1.2) -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div onclick="toggleCard('card3')" class="px-6 py-4 bg-slate-50/70 hover:bg-slate-100/60 cursor-pointer flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <span class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center text-xs font-bold">3</span>
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Thẻ 3: Tứ chẩn & Đánh giá YHCT – <span class="italic font-normal text-slate-500">"Vọng – Văn – Vấn – Thiết"</span></h3>
+                <p class="text-[11px] text-slate-500">Thư viện ảnh mẫu lưỡi, checklist tiếng nói hơi thở, bảng mạch YHCT</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded"><i class="fa-solid fa-check mr-1"></i>Đã đánh giá</span>
+              <i id="icon-card3" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform"></i>
+            </div>
+          </div>
+          <div id="content-card3" class="p-6 border-t border-slate-100 space-y-4 text-xs">
+            <!-- Mandatory Medical Disclaimer (Doc line 108) -->
+            <div class="bg-slate-100 text-slate-700 px-3.5 py-2 rounded-lg text-[11px] border border-slate-200 flex items-center">
+              <i class="fa-solid fa-info-circle text-teal-600 mr-2"></i>
+              <span><b>Ghi chú chuyên môn:</b> Nhận định YHCT không thay thế chẩn đoán y học hiện đại. Kết hợp hài hòa YHCT và YHHĐ để đạt hiệu quả chăm sóc tối ưu.</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <!-- Vọng chẩn -->
+              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <div class="flex justify-between items-center mb-2">
+                  <h4 class="font-bold text-slate-800"><i class="fa-solid fa-eye text-teal-600 mr-1"></i> 1. Vọng chẩn</h4>
+                  <span class="text-[10px] bg-slate-200 px-1.5 py-0.2 rounded text-slate-600">Thư viện mẫu</span>
+                </div>
+                <div class="space-y-2">
+                  <div>
+                    <span class="text-slate-500 text-[11px]">Sắc diện / Thần thái:</span>
+                    <select class="w-full mt-1 p-1.5 bg-white border border-slate-200 rounded text-xs">
+                      <option>Thần mệt mỏi, quầng mắt thâm, sắc mặt hơi úa</option>
+                      <option>Sắc diện hồng hào, hữu thần</option>
+                      <option>Sắc mặt trắng bệch, đoản khí</option>
+                    </select>
+                  </div>
+                  <div>
+                    <span class="text-slate-500 text-[11px]">Chất lưỡi & Rêu lưỡi:</span>
+                    <select class="w-full mt-1 p-1.5 bg-white border border-slate-200 rounded text-xs font-semibold text-teal-800">
+                      <option>Lưỡi thon, chất lưỡi hồng nhạt, rêu trắng mỏng (Tâm Tỳ hư)</option>
+                      <option>Lưỡi đỏ, rêu vàng dày (Nhiệt thịnh)</option>
+                      <option>Lưỡi bệu, có dấu răng 2 bên (Tỳ hư đàm thấp)</option>
+                      <option>Chất lưỡi tím ám, có điểm ứ huyết (Khí trệ huyết ứ)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Văn chẩn -->
+              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-ear-listen text-teal-600 mr-1"></i> 2. Văn chẩn</h4>
+                <div class="space-y-1.5">
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" checked class="rounded text-teal-600">
+                    <span>Tiếng nói hơi nhỏ, hay thở dài</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded text-teal-600">
+                    <span>Hơi thở ngắn, đoản hơi</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" class="rounded text-teal-600">
+                    <span>Ho húng hắng về đêm</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Vấn chẩn -->
+              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-comments text-teal-600 mr-1"></i> 3. Vấn chẩn</h4>
+                <div class="space-y-1.5">
+                  <div>
+                    <span class="text-slate-500 text-[11px]">Hàn / Nhiệt:</span>
+                    <span class="block font-medium">Sợ gió nhẹ, tay chân lạnh về đêm</span>
+                  </div>
+                  <div>
+                    <span class="text-slate-500 text-[11px]">Giấc ngủ:</span>
+                    <span class="block font-medium text-rose-700">Khó vào giấc (>60p), hay mê sảng</span>
+                  </div>
+                  <div>
+                    <span class="text-slate-500 text-[11px]">Tiêu hóa:</span>
+                    <span class="block font-medium">Ăn kém ngon, đại tiện phân khuôn</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Thiết chẩn -->
+              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-hand-holding-medical text-teal-600 mr-1"></i> 4. Thiết chẩn (Mạch)</h4>
+                <div class="space-y-2">
+                  <div>
+                    <span class="text-slate-500 text-[11px]">Mạch tả (Tâm, Can, Thận):</span>
+                    <span class="block font-bold text-teal-900 bg-white p-1 rounded border border-slate-200">Mạch Trầm Nhược, Tế Sác</span>
+                  </div>
+                  <div>
+                    <span class="text-slate-500 text-[11px]">Biện chứng Bát cương:</span>
+                    <span class="block font-bold text-indigo-900 bg-white p-1 rounded border border-slate-200">Tâm Tỳ Lưỡng Hư / Khí huyết bất túc</span>
+                  </div>
+                  <div class="flex items-center justify-between text-[11px] pt-1">
+                    <span class="text-slate-500">Độ chắc chắn:</span>
+                    <span class="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Cao (90%)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- THẺ 4: Lối sống & Bối cảnh (Bản đồ 7 lĩnh vực) (Doc 1.2) -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div onclick="toggleCard('card4')" class="px-6 py-4 bg-slate-50/70 hover:bg-slate-100/60 cursor-pointer flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <span class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center text-xs font-bold">4</span>
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Thẻ 4: Lối sống & Bối cảnh cá nhân – <span class="italic font-normal text-slate-500">"Sống thế nào, chăm thế ấy"</span></h3>
+                <p class="text-[11px] text-slate-500">Bản đồ lối sống 7 lĩnh vực: Đèn Xanh - Vàng - Đỏ trực quan</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded"><i class="fa-solid fa-triangle-exclamation mr-1"></i>3 điểm báo động</span>
+              <i id="icon-card4" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform"></i>
+            </div>
+          </div>
+          <div id="content-card4" class="p-6 border-t border-slate-100 space-y-4">
+            <!-- 7 Lĩnh vực trực quan dạng thẻ đèn giao thông (Traffic Light) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <!-- 1. Dinh dưỡng -->
+              <div class="p-3 rounded-xl border border-amber-200 bg-amber-50/50">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="font-bold text-slate-800"><i class="fa-solid fa-utensils text-amber-600 mr-1"></i> 1. Dinh dưỡng</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500" title="Cần cải thiện"></span>
+                </div>
+                <p class="text-slate-600 text-[11px]">Ăn không đúng bữa, bỏ bữa sáng, uống ít nước (&lt; 1 lít/ngày), thích ăn đồ cay nóng.</p>
+              </div>
+
+              <!-- 2. Giấc ngủ (Đỏ) -->
+              <div class="p-3 rounded-xl border border-rose-200 bg-rose-50/50">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="font-bold text-rose-900"><i class="fa-solid fa-bed text-rose-600 mr-1"></i> 2. Giấc ngủ</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-600 badge-pulse" title="Báo động đỏ"></span>
+                </div>
+                <p class="text-rose-800 text-[11px] font-medium">Ngủ 3 - 4h/đêm, thức giấc lúc 2-3h sáng không ngủ lại được. Điểm chất lượng: 3/10.</p>
+              </div>
+
+              <!-- 3. Vận động (Vàng) -->
+              <div class="p-3 rounded-xl border border-amber-200 bg-amber-50/50">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="font-bold text-slate-800"><i class="fa-solid fa-person-running text-amber-600 mr-1"></i> 3. Vận động</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500" title="Cần cải thiện"></span>
+                </div>
+                <p class="text-slate-600 text-[11px]">Ngồi làm việc &gt; 9 tiếng/ngày. Không tập thể dục thường xuyên. Nguy cơ thoái hóa cao.</p>
+              </div>
+
+              <!-- 4. Tâm lý (Vàng) -->
+              <div class="p-3 rounded-xl border border-amber-200 bg-amber-50/50">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="font-bold text-slate-800"><i class="fa-solid fa-brain text-amber-600 mr-1"></i> 4. Tâm lý & Stress</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500" title="Cần cải thiện"></span>
+                </div>
+                <p class="text-slate-600 text-[11px]">Áp lực deadline dự án. Thang GAD-7 rút gọn: 8/21 (Lo âu mức độ nhẹ đến vừa).</p>
+              </div>
+
+              <!-- 5. Thói quen (Đỏ) -->
+              <div class="p-3 rounded-xl border border-rose-200 bg-rose-50/50">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="font-bold text-rose-900"><i class="fa-solid fa-smoking text-rose-600 mr-1"></i> 5. Thói quen</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-600 badge-pulse" title="Báo động đỏ"></span>
+                </div>
+                <p class="text-rose-800 text-[11px]">Hút thuốc 1/2 gói/ngày, dùng cà phê đậm đặc lúc 16h chiều (yếu tố phá hỏng giấc ngủ).</p>
+              </div>
+
+              <!-- 6. Gia đình / Xã hội (Xanh) -->
+              <div class="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="font-bold text-slate-800"><i class="fa-solid fa-people-roof text-emerald-600 mr-1"></i> 6. Nguồn lực gia đình</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500" title="Rất tốt"></span>
+                </div>
+                <p class="text-slate-600 text-[11px]">Vợ rất ủng hộ và nhắc nhở uống thuốc/nấu ăn tẩm bổ. Kinh tế gia đình ổn định.</p>
+              </div>
+
+              <!-- 7. Khí hậu / Môi trường (Xanh) -->
+              <div class="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50">
+                <div class="flex justify-between items-center mb-1">
+                  <span class="font-bold text-slate-800"><i class="fa-solid fa-cloud-sun text-emerald-600 mr-1"></i> 7. Môi trường sống</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500" title="Tốt"></span>
+                </div>
+                <p class="text-slate-600 text-[11px]">Phòng ngủ yên tĩnh, thông thoáng, không gần đường lớn, không bụi bặm.</p>
+              </div>
+
+              <!-- Lifestyle Summary -->
+              <div class="p-3 rounded-xl border border-teal-200 bg-teal-50 flex flex-col justify-center text-center">
+                <span class="text-xs font-bold text-teal-900">Điểm Lối Sống Tổng Quát</span>
+                <span class="text-2xl font-black text-teal-700 mt-0.5">5.8 / 10</span>
+                <span class="text-[10px] text-teal-800 mt-1">Cần tập trung chỉnh: Cà phê, Giờ ngủ, Bài tập lưng</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- THẺ 5: Thuốc & Kiểm tra tương tác thuốc - thảo dược (Doc 1.2) -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div onclick="toggleCard('card5')" class="px-6 py-4 bg-slate-50/70 hover:bg-slate-100/60 cursor-pointer flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <span class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center text-xs font-bold">5</span>
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Thẻ 5: Thuốc & Sản phẩm đang dùng – <span class="italic font-normal text-slate-500">"Dùng gì, tương tác gì"</span></h3>
+                <p class="text-[11px] text-slate-500">Quét tương tác thuốc Tây – Thảo dược tự động, phân loại kê đơn/TPCN</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-rose-600 font-semibold bg-rose-50 px-2 py-0.5 rounded"><i class="fa-solid fa-triangle-exclamation mr-1"></i>1 tương tác cần lưu ý</span>
+              <i id="icon-card5" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform"></i>
+            </div>
+          </div>
+          <div id="content-card5" class="p-6 border-t border-slate-100 space-y-4 text-xs">
+            <!-- Active medications list -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead class="bg-slate-50 text-[10px] uppercase font-bold text-slate-500 border-b">
+                  <tr>
+                    <th class="p-2">Tên thuốc / Thảo dược</th>
+                    <th class="p-2">Phân loại</th>
+                    <th class="p-2">Liều & Đường dùng</th>
+                    <th class="p-2">Thời điểm dùng</th>
+                    <th class="p-2">Tuân thủ</th>
+                    <th class="p-2">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr>
+                    <td class="p-2 font-bold text-slate-800">Amlodipine 5mg</td>
+                    <td class="p-2"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-[10px] font-semibold">Thuốc kê đơn (Tây y)</span></td>
+                    <td class="p-2">1 viên / ngày (Uống)</td>
+                    <td class="p-2">Sáng 8h00 sau ăn</td>
+                    <td class="p-2 text-emerald-600 font-semibold">Đều đặn (100%)</td>
+                    <td class="p-2 text-slate-400"><i class="fa-solid fa-trash cursor-pointer hover:text-rose-500"></i></td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-bold text-slate-800">Ginkgo Biloba (Bạch quả) 120mg</td>
+                    <td class="p-2"><span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded text-[10px] font-semibold">TPCN / Thảo dược</span></td>
+                    <td class="p-2">1 viên / ngày (Uống)</td>
+                    <td class="p-2">Tự mua uống tối</td>
+                    <td class="p-2 text-amber-600 font-semibold">Không đều (50%)</td>
+                    <td class="p-2 text-slate-400"><i class="fa-solid fa-trash cursor-pointer hover:text-rose-500"></i></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Intelligent Drug-Herb Interaction Check Button & Warning Box (Doc line 152) -->
+            <div class="flex items-center space-x-3 pt-2">
+              <button onclick="runInteractionChecker()" class="px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg text-xs shadow-xs flex items-center">
+                <i class="fa-solid fa-shield-virus mr-1.5"></i> Chạy kiểm tra tương tác Thuốc – Thảo dược
+              </button>
+              <span class="text-slate-500 text-[11px]">Hệ thống tự động tra cứu cơ sở dữ liệu tương tác lâm sàng</span>
+            </div>
+
+            <div id="interactionCheckResult" class="bg-amber-50 border border-amber-300 p-3.5 rounded-xl text-xs space-y-1">
+              <div class="flex items-center text-amber-900 font-bold">
+                <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-2"></i>
+                <span>CẢNH BÁO TƯƠNG TÁC THUỐC (Mức độ Trung bình):</span>
+              </div>
+              <p class="text-amber-800 text-[11px]">
+                <b>Ginkgo Biloba</b> kết hợp với các thuốc chống đông hoặc hạ áp có thể gây tăng tác dụng hoặc nguy cơ xuất huyết vi thể. Nếu kê đơn thêm <b>Trà hoa cúc - Tâm sen</b>: Không gây tương tác đối kháng với Amlodipine, nhưng cần giãn cách thời gian dùng (sáng - tối) để tránh hạ huyết áp quá mức ban đêm.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- THẺ 6: Tổng hợp & Mục tiêu ("Bảng tổng hợp 1 trang") (Doc 1.2) -->
+        <div class="bg-white rounded-2xl border-2 border-teal-500 shadow-md overflow-hidden">
+          <div class="px-6 py-4 bg-teal-50 flex justify-between items-center border-b border-teal-100">
+            <div class="flex items-center space-x-3">
+              <span class="w-7 h-7 rounded-lg bg-teal-700 text-white flex items-center justify-center text-xs font-bold">6</span>
+              <div>
+                <h3 class="text-sm font-bold text-teal-950">Thẻ 6: Tổng Hợp Hồ Sơ & Mục Tiêu Chăm Sóc – <span class="italic font-normal text-teal-700">"Chốt lại để lên đường"</span></h3>
+                <p class="text-[11px] text-teal-800">Đầu ra Giai đoạn 1: Bảng tổng hợp thống nhất với khách hàng trước khi lập Recipe</p>
+              </div>
+            </div>
+            <span class="text-xs bg-teal-200/80 text-teal-900 px-2.5 py-1 rounded-full font-bold">Sẵn sàng lập Recipe</span>
+          </div>
+
+          <div class="p-6 space-y-4 text-xs">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Left: Priority issues & missing data -->
+              <div class="space-y-3">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <h4 class="font-bold text-slate-900 mb-2 flex items-center">
+                    <i class="fa-solid fa-list-check text-teal-600 mr-1.5"></i> Danh sách vấn đề ưu tiên đã xác nhận:
+                  </h4>
+                  <ol class="list-decimal list-inside space-y-1 text-slate-700 font-medium">
+                    <li><b class="text-rose-700">Mất ngủ mãn tính</b> (Khó vào giấc, ngủ &lt; 4h/đêm) — <span class="text-rose-600 font-bold">Ưu tiên số 1</span></li>
+                    <li><b class="text-amber-700">Đau cột sống thắt lưng mạn tính</b> (VAS 6/10) — <span class="text-amber-600 font-bold">Ưu tiên số 2</span></li>
+                    <li><b class="text-slate-700">Căng thẳng / Lo âu nhẹ do công việc</b> — <span class="text-slate-600">Ưu tiên số 3</span></li>
+                  </ol>
+                </div>
+
+                <div class="p-3 rounded-xl bg-amber-50/50 border border-amber-200">
+                  <h4 class="font-bold text-amber-900 mb-1 flex items-center">
+                    <i class="fa-solid fa-clipboard-question text-amber-600 mr-1.5"></i> Dữ liệu y tế còn thiếu cần bổ sung:
+                  </h4>
+                  <p class="text-amber-800 text-[11px]">Chưa có phim chụp X-quang / MRI cột sống thắt lưng trong 6 tháng gần nhất. Chưa có xét nghiệm sinh hóa máu (Acid Uric, Men gan, Creatinine).</p>
+                </div>
+              </div>
+
+              <!-- Right: Agreed SMART Goals -->
+              <div class="p-4 rounded-xl bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 flex flex-col justify-between">
+                <div>
+                  <h4 class="font-bold text-teal-950 mb-2 flex items-center text-sm">
+                    <i class="fa-solid fa-bullseye text-teal-600 mr-2"></i> Mục Tiêu Chăm Sóc Thống Nhất (SMART Goals):
+                  </h4>
+                  <ul class="space-y-2 text-teal-900 font-medium text-[11px]">
+                    <li class="flex items-start">
+                      <i class="fa-solid fa-circle-check text-emerald-600 mr-2 mt-0.5"></i>
+                      <span><b>Giấc ngủ:</b> Đạt thời lượng ngủ 6.5 – 7.5 tiếng/đêm, rút ngắn thời gian vào giấc &lt; 20 phút trong 4 tuần.</span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fa-solid fa-circle-check text-emerald-600 mr-2 mt-0.5"></i>
+                      <span><b>Đau lưng:</b> Giảm điểm đau thắt lưng từ 6/10 xuống &le; 3/10; ngồi làm việc liên tục 45 phút không co cứng.</span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fa-solid fa-circle-check text-emerald-600 mr-2 mt-0.5"></i>
+                      <span><b>Lối sống:</b> Không dùng cà phê sau 14h chiều, duy trì bài tập giãn cơ lưng 15 phút mỗi sáng.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-teal-200/60 flex justify-end">
+                  <button onclick="advanceToPhase2()" class="w-full sm:w-auto px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md shadow-teal-600/30 flex items-center justify-center">
+                    <i class="fa-solid fa-file-signature mr-2"></i> Duyệt Hồ Sơ & Chuyển Sang Giai Đoạn 2 (Lập Recipe)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------------- SECTION 4: GIAI ĐOẠN 2 - BÁC SĨ LẬP RECIPE ---------------- -->
+    <div id="tab-phase2" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full">GIAI ĐOẠN 2</span>
+              <h2 class="text-lg font-bold text-slate-900">Xưởng Thiết Kế Kế Hoạch / Recipe Cá Nhân Hóa</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Khẩu hiệu: <b class="text-amber-700 italic">"Lên đường đúng – Mỗi người một con đường"</b> — Can thiệp 5 nhóm, quản lý đợt & thẻ an toàn</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-slate-500">Phiên bản: <b class="text-teal-700 font-mono">v1.2 (Đã duyệt)</b></span>
+            <button onclick="signAndApproveRecipe()" class="text-xs px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-xs flex items-center">
+              <i class="fa-solid fa-signature mr-1.5"></i> Bác sĩ Ký số & Phê duyệt
+            </button>
+            <button onclick="printPatientSummary()" class="text-xs px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg border border-slate-200 flex items-center">
+              <i class="fa-solid fa-file-pdf mr-1.5 text-rose-500"></i> Xuất bản tóm tắt 1 trang
+            </button>
+          </div>
+        </div>
+
+        <!-- Recipe Milestone Management (Đợt 1, 2, 3) -->
+        <div class="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-bold text-slate-700 uppercase">Hành trình điều trị:</span>
+              <span class="text-xs text-slate-600">3 tháng (Chia làm 3 đợt can thiệp liên tục)</span>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="alert('Đã gia hạn đợt 1 thêm 14 ngày theo đánh giá chuyên môn!')" class="text-[11px] font-semibold text-slate-700 bg-white border border-slate-200 px-2.5 py-1 rounded hover:bg-slate-50">
+                <i class="fa-solid fa-clock-rotate-left mr-1"></i> Gia hạn đợt
+              </button>
+              <button onclick="alert('Tạm dừng can thiệp có lưu vết lý do!')" class="text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded hover:bg-amber-100">
+                <i class="fa-solid fa-pause mr-1"></i> Tạm dừng
+              </button>
+              <button onclick="switchTab('phase3')" class="text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded hover:bg-teal-100">
+                <i class="fa-solid fa-chart-line mr-1"></i> Chuyển sang Theo dõi (GĐ 3)
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="p-3 bg-teal-50 border-2 border-teal-500 rounded-xl">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-xs text-teal-900">ĐỢT 1: Khởi động & Làm quen</span>
+                <span class="text-[10px] bg-teal-600 text-white font-bold px-2 py-0.5 rounded-full">Đang thực hiện</span>
+              </div>
+              <p class="text-[11px] text-teal-800 mt-1">Thời gian: 01/06 – 30/06 (Tuần 1 - 4)</p>
+              <p class="text-[11px] text-teal-700 mt-1">Mục tiêu: Thiết lập nhịp sinh học, giảm đau cấp 30%, kiêng hoàn toàn cà phê chiều.</p>
+            </div>
+
+            <div class="p-3 bg-white border border-slate-200 rounded-xl opacity-75">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-xs text-slate-800">ĐỢT 2: Tăng cường & Tối ưu</span>
+                <span class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full">Kế tiếp</span>
+              </div>
+              <p class="text-[11px] text-slate-600 mt-1">Thời gian: 01/07 – 31/07 (Tuần 5 - 8)</p>
+              <p class="text-[11px] text-slate-500 mt-1">Mục tiêu: Đạt giấc ngủ sâu 7 tiếng, tăng cường bài tập cơ lưng vững bền.</p>
+            </div>
+
+            <div class="p-3 bg-white border border-slate-200 rounded-xl opacity-75">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-xs text-slate-800">ĐỢT 3: Củng cố & Phòng ngừa</span>
+                <span class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full">Kế tiếp</span>
+              </div>
+              <p class="text-[11px] text-slate-600 mt-1">Thời gian: 01/08 – 30/08 (Tuần 9 - 12)</p>
+              <p class="text-[11px] text-slate-500 mt-1">Mục tiêu: Tự duy trì lối sống lành mạnh, sẵn sàng chuyển sang Vườn Sức Khỏe (GĐ 4).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 NHÓM CAN THIỆP CHI TIẾT (Doc 2.2.B) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- CAN THIỆP 1: Thuốc & Thảo Dược -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center">
+              <span class="w-6 h-6 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center mr-2"><i class="fa-solid fa-leaf text-xs"></i></span>
+              1. Thuốc & Thảo Dược YHCT
+            </h3>
+            <button onclick="alert('Mở thư viện đơn mẫu được duyệt!')" class="text-[11px] text-teal-700 font-semibold hover:underline">+ Mẫu sẵn</button>
+          </div>
+          <!-- Card can thiep thao duoc chi tiet nhu Doc line 232 -->
+          <div class="bg-slate-50 border border-teal-200 p-3.5 rounded-xl space-y-2 text-xs">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="font-bold text-teal-950 text-sm">Trà Hoa Cúc – Tâm Sen – Toan Táo Nhân</span>
+                <p class="text-slate-500 text-[11px]">Mục đích: Thanh tâm an thần, giải uất, giúp dễ ngủ sâu</p>
+              </div>
+              <span class="bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded text-[10px]">Đang dùng</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-700 pt-1">
+              <div><b>Liều dùng:</b> 1 gói túi lọc (hãm 250ml nước sôi)</div>
+              <div><b>Thời điểm:</b> 20h30 tối (trước ngủ 45 phút)</div>
+              <div><b>Bác sĩ chỉ định:</b> ThS.BS Trần Văn Bình</div>
+              <div><b>Lưu ý:</b> Uống ấm, không dùng cùng rượu bia</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl space-y-2 text-xs">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="font-bold text-slate-900 text-sm">Amlodipine 5mg (Duy trì Tây y)</span>
+                <p class="text-slate-500 text-[11px]">Kiểm soát huyết áp theo chỉ định chuyên khoa Nội</p>
+              </div>
+              <span class="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded text-[10px]">Đang dùng</span>
+            </div>
+            <div class="text-[11px] text-slate-700">
+              <b>Thời điểm:</b> 1 viên sau ăn sáng 30 phút. Đo huyết áp trước khi uống.
+            </div>
+          </div>
+        </div>
+
+        <!-- CAN THIỆP 2: Dinh Dưỡng Điều Trị -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center">
+              <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center mr-2"><i class="fa-solid fa-bowl-food text-xs"></i></span>
+              2. Dinh Dưỡng & Ẩm Thực Trị Liệu
+            </h3>
+            <span class="text-[11px] text-slate-500">Cá nhân hóa theo thể trạng</span>
+          </div>
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-xs">
+            <h4 class="font-bold text-slate-800">Thực đơn khuyến nghị:</h4>
+            <ul class="space-y-1 text-slate-700 text-[11px]">
+              <li>• Tăng cường thực phẩm giàu magie & tryptophan: Canh hạt sen sườn non, cháo yến mạch, chuối chín, rau chân vịt.</li>
+              <li>• Uống đủ 1.8 – 2.0 lít nước ấm/ngày, chia đều đến 19h00 (tránh uống nhiều nước sau 21h gây thức tiểu đêm).</li>
+            </ul>
+            <div class="pt-2 border-t border-slate-200">
+              <span class="font-bold text-rose-700 text-[11px]">Kiêng khem nghiêm ngặt:</span>
+              <p class="text-rose-900 text-[11px]">Tuyệt đối không uống cà phê, trà mạn sau 14h00. Hạn chế tối đa rượu bia và thức ăn chiên xào nhiều dầu mỡ buổi tối.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CAN THIỆP 3: Vận Động & Phục Hồi Chức Năng -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center">
+              <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center mr-2"><i class="fa-solid fa-person-walking text-xs"></i></span>
+              3. Vận Động & Bài Tập Cột Sống
+            </h3>
+            <button onclick="alert('Đã gửi video bài tập kéo giãn cột sống qua Zalo cho khách hàng!')" class="text-[11px] text-teal-700 font-semibold hover:underline">
+              <i class="fa-solid fa-video mr-1"></i> Gửi video bài tập
+            </button>
+          </div>
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-xs">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-slate-900">Chuỗi bài tập Williams giãn cơ thắt lưng:</span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">15 phút / ngày</span>
+            </div>
+            <p class="text-slate-600 text-[11px]">Thực hiện tư thế nằm ngửa co gối ép sát ngực (Knee-to-chest) và tư thế cây cầu (Bridge pose). Tập vào buổi sáng sau thức dậy và buổi chiều sau khi rời bàn làm việc.</p>
+            <div class="p-2 bg-amber-50 rounded border border-amber-200 text-[10px] text-amber-800">
+              <b>Lưu ý an toàn:</b> Dừng ngay nếu thấy đau buốt lan dọc xuống cẳng chân hoặc tê bì bàn chân.
+            </div>
+          </div>
+        </div>
+
+        <!-- CAN THIỆP 4: Tâm Lý & Vệ Sinh Giấc Ngủ -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center">
+              <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center mr-2"><i class="fa-solid fa-moon text-xs"></i></span>
+              4. Tâm Lý & Vệ Sinh Giấc Ngủ
+            </h3>
+            <span class="text-[11px] text-slate-500">Giảm cortisol & lo âu</span>
+          </div>
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-xs">
+            <h4 class="font-bold text-slate-800">Giao thức Vệ sinh giấc ngủ (Sleep Hygiene Protocol):</h4>
+            <ul class="space-y-1 text-slate-700 text-[11px]">
+              <li>• <b>Tắt màn hình:</b> Không dùng điện thoại, máy tính sau 21h30 (tránh ánh sáng xanh ức chế melatonin).</li>
+              <li>• <b>Thở 4-7-8:</b> Hít sâu 4 giây, giữ 7 giây, thở ra từ từ qua miệng 8 giây (lặp lại 4 chu kỳ khi lên giường).</li>
+              <li>• <b>Nhiệt độ phòng ngủ:</b> Duy trì điều hòa ở mức 25 - 26°C mát mẻ và tối hoàn toàn.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAN THIỆP 5: THẺ AN TOÀN & LỊCH TÁI KHÁM (Doc 2.2.D) -->
+      <div class="bg-rose-50/70 border-2 border-rose-300 rounded-2xl p-6 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-shield-heart"></i></span>
+            <div>
+              <h3 class="text-base font-bold text-rose-950">5. Kế Hoạch Dự Phòng & "Thẻ An Toàn" Cho Bệnh Nhân</h3>
+              <p class="text-xs text-rose-800">Biết trước để an tâm — Hướng dẫn xử trí sự cố rõ ràng</p>
+            </div>
+          </div>
+          <button onclick="openPatientSafetyCard()" class="text-xs px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg shadow-sm">
+            <i class="fa-solid fa-id-badge mr-1.5"></i> Mở Thẻ An Toàn Đầy Đủ
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="p-3 bg-white rounded-xl border border-rose-200">
+            <span class="font-bold text-slate-900 block mb-1 text-rose-800"><i class="fa-solid fa-ban text-rose-600 mr-1"></i> Điều tuyệt đối cần tránh:</span>
+            <p class="text-slate-700 text-[11px]">Cúi gập lưng bê vác vật nặng đột ngột; ngồi vẹo một bên; tự ý mua thêm thuốc ngủ diazepam/seduxen khi chưa có ý kiến bác sĩ.</p>
+          </div>
+
+          <div class="p-3 bg-white rounded-xl border border-amber-200">
+            <span class="font-bold text-slate-900 block mb-1 text-amber-800"><i class="fa-solid fa-phone text-amber-600 mr-1"></i> Khi nào liên hệ nhân viên y tế:</span>
+            <p class="text-slate-700 text-[11px]">Đau lưng tăng từ mức 6 lên mức &ge; 7; khó ngủ kéo dài trên 3 đêm liên tiếp; có cảm giác buồn nôn, hồi hộp sau khi uống trà thảo dược.</p>
+          </div>
+
+          <div class="p-3 bg-white rounded-xl border border-rose-400 bg-rose-100/50">
+            <span class="font-bold text-rose-950 block mb-1"><i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> Cần khám cấp cứu ngay lập tức:</span>
+            <p class="text-rose-900 text-[11px] font-semibold">Xuất hiện tê bì vùng đáy chậu hình yên ngựa; mất kiểm soát đại tiểu tiện (bí tiểu/són tiểu cấp); đau lưng dữ dội kèm sốt cao hoặc yếu liệt chân.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------------- SECTION 5: GIAI ĐOẠN 3 - THEO DÕI, ĐÁNH GIÁ & ĐIỀU CHỈNH ---------------- -->
+    <div id="tab-phase3" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">GIAI ĐOẠN 3</span>
+              <h2 class="text-lg font-bold text-slate-900">Theo Dõi, Đánh Giá & Điều Chỉnh Kịp Thời</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Khẩu hiệu: <b class="text-emerald-700 italic">"Đi đúng hướng – Kịp thời điều chỉnh"</b> — Dòng thời gian sức khỏe (Health Timeline) & Biểu đồ tiến triển</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="openOneMinuteLogModal()" class="text-xs px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-xs flex items-center">
+              <i class="fa-solid fa-pen-to-square mr-1.5"></i> Ghi Nhật Ký 1 Phút
+            </button>
+            <button onclick="openTriageWorkflowModal()" class="text-xs px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg border border-slate-200 flex items-center">
+              <i class="fa-solid fa-clipboard-list mr-1.5"></i> Quy trình xử lý cảnh báo
+            </button>
+            <button onclick="advanceToPhase4()" class="text-xs px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-xs flex items-center">
+              Chuyển sang Vườn Sức Khỏe (GĐ 4) <i class="fa-solid fa-arrow-right ml-1.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- HEALTH PROGRESS METRICS COMPARISON (Doc line 298) -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Metric 1: Đau lưng -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="flex justify-between items-center text-xs text-slate-500 mb-1">
+              <span class="font-bold text-slate-700">Mức đau lưng (VAS):</span>
+              <span class="font-bold text-emerald-600"><i class="fa-solid fa-arrow-trend-down mr-1"></i>Giảm 33% (Tốt)</span>
+            </div>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs text-slate-400">Ban đầu: <b>6/10</b></span>
+              <div class="flex-1 mx-3 bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 40%"></div>
+              </div>
+              <span class="text-sm font-black text-emerald-700">4 / 10</span>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-1">Mục tiêu đợt 1: Đạt &le; 3/10</p>
+          </div>
+
+          <!-- Metric 2: Giấc ngủ -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="flex justify-between items-center text-xs text-slate-500 mb-1">
+              <span class="font-bold text-slate-700">Thời lượng ngủ:</span>
+              <span class="font-bold text-emerald-600"><i class="fa-solid fa-arrow-trend-up mr-1"></i>Tăng 62% (Tốt)</span>
+            </div>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs text-slate-400">Ban đầu: <b>4.0h</b></span>
+              <div class="flex-1 mx-3 bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div class="bg-teal-500 h-2.5 rounded-full" style="width: 75%"></div>
+              </div>
+              <span class="text-sm font-black text-teal-700">6.5 h/đêm</span>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-1">Mục tiêu đợt 1: Đạt 7.0 h/đêm</p>
+          </div>
+
+          <!-- Metric 3: Tuân thủ -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="flex justify-between items-center text-xs text-slate-500 mb-1">
+              <span class="font-bold text-slate-700">Tỷ lệ tuân thủ bài tập & thảo dược:</span>
+              <span class="font-bold text-emerald-600"><i class="fa-solid fa-arrow-trend-up mr-1"></i>Xuất sắc</span>
+            </div>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs text-slate-400">Đợt 1: <b>80%</b></span>
+              <div class="flex-1 mx-3 bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div class="bg-indigo-500 h-2.5 rounded-full" style="width: 90%"></div>
+              </div>
+              <span class="text-sm font-black text-indigo-700">90%</span>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-1">Đã uống trà 27/30 ngày</p>
+          </div>
+        </div>
+
+        <!-- PROGRESS CHART (Chart.js) -->
+        <div class="mt-6 p-4 rounded-xl border border-slate-200">
+          <div class="flex justify-between items-center mb-3">
+            <h4 class="text-xs font-bold text-slate-900 flex items-center">
+              <i class="fa-solid fa-chart-line text-teal-600 mr-2"></i> Xu Hướng Tiến Triển Lâm Sàng (30 Ngày Qua)
+            </h4>
+            <div class="text-[11px] space-x-2">
+              <span class="inline-flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1"></span> Mức đau (VAS)</span>
+              <span class="inline-flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-teal-500 mr-1"></span> Giấc ngủ (Giờ)</span>
+            </div>
+          </div>
+          <div class="h-60 w-full">
+            <canvas id="healthProgressChart"></canvas>
+          </div>
+        </div>
+
+        <!-- HEALTH TIMELINE (Dòng thời gian sức khỏe - Doc line 304) -->
+        <div class="mt-6">
+          <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3 flex items-center">
+            <i class="fa-solid fa-timeline text-teal-600 mr-2"></i> Dòng Thời Gian Sức Khỏe (Health Timeline)
+          </h4>
+          <div class="space-y-3" id="healthTimelineEntries">
+            <!-- Timeline Item 1 -->
+            <div class="flex items-start space-x-3 p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+              <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-slate-900">18/10/2026 — Nhật ký ngày (Tuân thủ tốt)</span>
+                  <span class="text-slate-400 text-[11px]">Hôm qua</span>
+                </div>
+                <p class="text-slate-600 mt-1">Uống trà hoa cúc lúc 20h30, tập 15 phút giãn cơ lưng. Ngủ từ 23h00 đến 6h00 sáng (7.0h), không bị thức giấc giữa đêm. Điểm đau lưng giảm còn 3.5/10.</p>
+              </div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="flex items-start space-x-3 p-3.5 bg-amber-50/60 rounded-xl border border-amber-200 text-xs">
+              <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs shrink-0">
+                <i class="fa-solid fa-phone"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-amber-950">15/10/2026 — CSKH Check-in Định Kỳ Tuần</span>
+                  <span class="text-slate-400 text-[11px]">ĐD. Hoàng Thúy</span>
+                </div>
+                <p class="text-slate-700 mt-1">Gọi điện hỗ trợ bệnh nhân. Bệnh nhân phản hồi vị trà thảo dược rất dễ uống, dễ chịu, không còn cảm giác bồn chồn lo âu trước khi ngủ. Nhắc bệnh nhân duy trì tập lưng đều đặn.</p>
+              </div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="flex items-start space-x-3 p-3.5 bg-rose-50/50 rounded-xl border border-rose-200 text-xs">
+              <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs shrink-0">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold text-rose-950">10/10/2026 — Cảnh báo: Quên liều & Tăng đau tạm thời</span>
+                  <span class="text-slate-400 text-[11px]">Đã xử lý</span>
+                </div>
+                <p class="text-slate-700 mt-1">Bệnh nhân đi công tác tỉnh 2 ngày quên mang trà thảo dược và ngồi xe ô tô đường dài nhiều. Báo đau lưng tăng lên 6/10. Bác sĩ đã tư vấn xoa bóp ấm và dùng lại trà ngay khi về.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------------- SECTION 6: GIAI ĐOẠN 4 - VƯỜN SỨC KHỎE & PHÒNG BỆNH ---------------- -->
+    <div id="tab-phase4" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full">GIAI ĐOẠN 4</span>
+              <h2 class="text-lg font-bold text-slate-900">Vườn Sức Khỏe – Duy Trì & Phòng Bệnh Chủ Động</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Khẩu hiệu: <b class="text-indigo-700 italic">"Sống khỏe – Chủ động – Bền vững"</b> — Chuyển từ điều trị triệu chứng sang quản trị sức khỏe trọn đời</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <!-- Streak badge -->
+            <div class="flex items-center space-x-1.5 bg-amber-50 border border-amber-200 text-amber-900 px-3 py-1.5 rounded-xl font-bold text-xs shadow-xs">
+              <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
+              <span>Chuỗi sống khỏe: <b class="text-amber-700">28 Ngày liên tục</b></span>
+            </div>
+            <button onclick="alert('Đã thiết lập lịch tầm soát tim mạch & ung thư định kỳ!')" class="text-xs px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-xs">
+              <i class="fa-solid fa-calendar-check mr-1.5"></i> Đặt lịch tầm soát
+            </button>
+          </div>
+        </div>
+
+        <!-- 4.1 RISK PROFILE & PREVENTION GOALS (Doc 4.1) -->
+        <div class="mt-6 p-4 rounded-xl bg-gradient-to-r from-indigo-50/70 to-blue-50/70 border border-indigo-200 text-xs">
+          <div class="flex flex-wrap justify-between items-start gap-2">
+            <div>
+              <span class="font-bold text-indigo-950 text-sm flex items-center">
+                <i class="fa-solid fa-dna text-indigo-600 mr-2"></i> Hồ Sơ Nguy Cơ & Mục Tiêu Phòng Bệnh Trọn Đời
+              </span>
+              <p class="text-indigo-900 mt-1">Đánh giá theo Guideline Bộ Y Tế & Chuyên khoa Lão khoa / Nội tiết</p>
+            </div>
+            <span class="text-xs bg-indigo-200 text-indigo-900 font-bold px-2.5 py-0.5 rounded-full">Cấp độ: Duy trì</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 text-[11px] text-indigo-950">
+            <div class="bg-white/80 p-2.5 rounded-lg border border-indigo-100">
+              <b>Yếu tố nguy cơ chính:</b>
+              <p class="text-slate-600 mt-0.5">Tiền sử gia đình có bố tăng huyết áp. Công việc ít vận động tĩnh tại. Tuổi &gt; 50.</p>
+            </div>
+            <div class="bg-white/80 p-2.5 rounded-lg border border-indigo-100">
+              <b>Khuyến nghị sàng lọc định kỳ:</b>
+              <p class="text-slate-600 mt-0.5">Tầm soát tim mạch 6 tháng/lần. Xét nghiệm đường huyết HbA1c & mỡ máu 6 tháng/lần.</p>
+            </div>
+            <div class="bg-white/80 p-2.5 rounded-lg border border-indigo-100">
+              <b>Tiêm chủng phòng bệnh:</b>
+              <p class="text-slate-600 mt-0.5">Tiêm vaccine cúm mùa hàng năm (Tháng 9). Tiêm phòng phế cầu khuẩn (Pneumovax 23).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.2 LIFESTYLE MAINTENANCE - 5 PILLARS (Doc 4.1.450) -->
+        <div class="mt-6">
+          <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-3 flex items-center">
+            <i class="fa-solid fa-seedling text-emerald-600 mr-2"></i> Kế Hoạch Duy Trì 5 Lĩnh Vực ("Sống Khỏe Mỗi Ngày")
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="font-bold text-slate-800 block mb-1"><i class="fa-solid fa-utensils text-teal-600 mr-1"></i> Dinh dưỡng</span>
+              <p class="text-slate-600 text-[11px]">Chế độ ăn Địa Trung Hải, giảm muối dưới 5g/ngày, tăng dầu ô liu, cá béo và các loại hạt.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="font-bold text-slate-800 block mb-1"><i class="fa-solid fa-person-walking text-emerald-600 mr-1"></i> Vận động</span>
+              <p class="text-slate-600 text-[11px]">Đi bộ nhanh 30 phút x 5 ngày/tuần (đạt 150 phút/tuần). Bơi lội vào cuối tuần.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="font-bold text-slate-800 block mb-1"><i class="fa-solid fa-bed text-indigo-600 mr-1"></i> Giấc ngủ</span>
+              <p class="text-slate-600 text-[11px]">Duy trì ngủ từ 22h30 đến 6h00. Không mang công việc vào phòng ngủ.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="font-bold text-slate-800 block mb-1"><i class="fa-solid fa-spa text-purple-600 mr-1"></i> Quản lý stress</span>
+              <p class="text-slate-600 text-[11px]">Thiền định hoặc hít thở sâu 10 phút vào đầu ngày. Tham gia câu lạc bộ nhiếp ảnh.</p>
+            </div>
+
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <span class="font-bold text-slate-800 block mb-1"><i class="fa-solid fa-ban-smoking text-rose-600 mr-1"></i> Thói quen</span>
+              <p class="text-slate-600 text-[11px]">Đã cai thuốc lá thành công 28 ngày qua. Không uống rượu bia quá 1 đơn vị cồn/ngày.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.3 LONG-TERM TRENDS & SCREENING CALENDAR (Doc line 459 & 518) -->
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Screening schedule -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+            <h4 class="font-bold text-slate-900 mb-3 flex items-center">
+              <i class="fa-solid fa-calendar-days text-teal-600 mr-2"></i> Lịch Nhắc & Sàng Lọc Tự Động Sắp Tới
+            </h4>
+            <div class="space-y-2">
+              <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
+                <div>
+                  <span class="font-bold text-slate-800">20/11/2026: Tái khám định kỳ 3 tháng</span>
+                  <p class="text-slate-500 text-[11px]">Đánh giá huyết áp, cột sống thắt lưng & giấc ngủ</p>
+                </div>
+                <span class="text-[10px] bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded">Tự động nhắc</span>
+              </div>
+
+              <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
+                <div>
+                  <span class="font-bold text-slate-800">15/12/2026: Xét nghiệm máu toàn diện</span>
+                  <p class="text-slate-500 text-[11px]">Đường huyết đói, HbA1c, Mỡ máu 4 chỉ số, Chức năng gan thận</p>
+                </div>
+                <span class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Định kỳ 6 tháng</span>
+              </div>
+
+              <div class="p-2.5 bg-white rounded-lg border border-slate-200 flex justify-between items-center">
+                <div>
+                  <span class="font-bold text-slate-800">10/01/2027: Tầm soát tim mạch chuyên sâu</span>
+                  <p class="text-slate-500 text-[11px]">Điện tâm đồ (ECG), Siêu âm Doppler tim & mạch cảnh</p>
+                </div>
+                <span class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Theo guideline</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Long-term Vitals Trend (6 Months) -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+            <h4 class="font-bold text-slate-900 mb-3 flex items-center">
+              <i class="fa-solid fa-chart-area text-indigo-600 mr-2"></i> Xu Hướng Sức Khỏe 6 Tháng (Doc line 518)
+            </h4>
+            <div class="space-y-2.5">
+              <div>
+                <div class="flex justify-between font-medium">
+                  <span>Huyết áp tâm thu:</span>
+                  <span class="text-emerald-700 font-bold">135 mmHg → 120 mmHg (↓ Rất tốt)</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
+                  <div class="bg-emerald-500 h-2 rounded-full" style="width: 85%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between font-medium">
+                  <span>Cân nặng cơ thể:</span>
+                  <span class="text-emerald-700 font-bold">75 kg → 71.5 kg (↓ 3.5kg bền vững)</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
+                  <div class="bg-teal-500 h-2 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between font-medium">
+                  <span>Đường huyết đói:</span>
+                  <span class="text-emerald-700 font-bold">5.8 mmol/L → 5.2 mmol/L (Ổn định)</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
+                  <div class="bg-indigo-500 h-2 rounded-full" style="width: 90%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 p-2 bg-indigo-50 border border-indigo-200 rounded text-[11px] text-indigo-900 font-medium">
+              💡 <b>Khuyến nghị bác sĩ:</b> Bệnh nhân đã chuyển sang nhóm "Chăm sóc chủ động phòng bệnh". Duy trì lối sống hiện tại và kiểm tra định kỳ đúng hẹn.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------------- SECTION 7: TRỢ LÝ AI LÂM SÀNG ---------------- -->
+    <div id="tab-ai_copilot" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-0.5 rounded-full">AI LÂM SÀNG</span>
+              <h2 class="text-lg font-bold text-slate-900">Trợ Lý AI Y Tế Hỗ Trợ Ra Quyết Định (Clinical Copilot)</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Tuân thủ nguyên tắc an toàn: <b class="text-purple-700 italic">"AI hỗ trợ tổng hợp, cảnh báo thiếu dữ liệu & gợi ý – Bác sĩ chịu trách nhiệm chuyên môn tối hậu"</b></p>
+          </div>
+          <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-lg border border-slate-200">Mô hình AI Y Tế chuyên khoa</span>
+        </div>
+
+        <!-- 4 AI Functional Toolkits -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+          <button onclick="runAiSummary()" class="p-4 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl text-left transition-all">
+            <i class="fa-solid fa-file-waveform text-purple-600 text-xl mb-2"></i>
+            <h4 class="font-bold text-purple-950 text-xs">1. Tóm tắt bệnh án 1 click</h4>
+            <p class="text-[11px] text-purple-800 mt-1">Tổng hợp toàn bộ hành trình 4 giai đoạn thành bản tóm tắt súc tích cho bác sĩ.</p>
+          </button>
+
+          <button onclick="runAiInteractionAudit()" class="p-4 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl text-left transition-all">
+            <i class="fa-solid fa-triangle-exclamation text-rose-600 text-xl mb-2"></i>
+            <h4 class="font-bold text-rose-950 text-xs">2. Rà soát tương tác thuốc</h4>
+            <p class="text-[11px] text-rose-800 mt-1">Phát hiện chống chỉ định, tương tác thuốc Tây – Thảo dược nguy hiểm tự động.</p>
+          </button>
+
+          <button onclick="runAiQuestions()" class="p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-all">
+            <i class="fa-solid fa-clipboard-question text-blue-600 text-xl mb-2"></i>
+            <h4 class="font-bold text-blue-950 text-xs">3. Gợi ý câu hỏi vấn chẩn</h4>
+            <p class="text-[11px] text-blue-800 mt-1">Tự động soạn các câu hỏi vấn chẩn theo thể trạng và triệu chứng của bệnh nhân.</p>
+          </button>
+
+          <button onclick="runAiEducationDoc()" class="p-4 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-xl text-left transition-all">
+            <i class="fa-solid fa-book-medical text-teal-600 text-xl mb-2"></i>
+            <h4 class="font-bold text-teal-950 text-xs">4. Soạn cẩm nang dặn dò</h4>
+            <p class="text-[11px] text-teal-800 mt-1">Tạo tờ rơi hướng dẫn kiêng khem, bài tập theo ngôn ngữ thân thiện dễ hiểu gửi khách.</p>
+          </button>
+        </div>
+
+        <!-- AI Output Window -->
+        <div class="mt-6 bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner font-sans text-xs">
+          <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+            <span class="font-bold text-teal-400 flex items-center">
+              <i class="fa-solid fa-robot mr-2"></i> Kết Quả Phân Tích Của Trợ Lý AI:
+            </span>
+            <div class="space-x-2">
+              <button onclick="copyAiOutput()" class="text-[11px] px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded">
+                <i class="fa-solid fa-copy mr-1"></i> Sao chép
+              </button>
+            </div>
+          </div>
+          <div id="aiOutputContent" class="mt-4 space-y-3 leading-relaxed text-slate-200">
+            <p class="text-slate-400 italic">Nhấp vào một trong 4 chức năng bên trên để AI tiến hành phân tích hồ sơ bệnh nhân đang chọn...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------------- SECTION 8: BÁO CÁO & KPI QUẢN TRỊ ---------------- -->
+    <div id="tab-reports" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Báo Cáo Hiệu Quả & Chỉ Số Quản Trị (KPI / SLA)</h2>
+            <p class="text-xs text-slate-500">Đo lường thời gian thực theo tiêu chuẩn Phần IV trong Đề cương CRM Y Bác Sĩ</p>
+          </div>
+          <button onclick="window.print()" class="text-xs px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg shadow-xs">
+            <i class="fa-solid fa-print mr-1.5"></i> Xuất Báo Cáo Quản Trị
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-xs font-semibold text-slate-500 uppercase">Tỷ lệ hoàn chỉnh hồ sơ</span>
+            <h3 class="text-2xl font-black text-teal-700 mt-1">92.5%</h3>
+            <p class="text-[11px] text-emerald-600 mt-1">Đạt chuẩn 6 thẻ thông minh</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-xs font-semibold text-slate-500 uppercase">Tỷ lệ Check-in đúng hạn</span>
+            <h3 class="text-2xl font-black text-blue-700 mt-1">88.4%</h3>
+            <p class="text-[11px] text-emerald-600 mt-1">Tăng 15% nhờ form 1 phút</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-xs font-semibold text-slate-500 uppercase">Thời gian xử lý cảnh báo đỏ</span>
+            <h3 class="text-2xl font-black text-rose-600 mt-1">18 phút</h3>
+            <p class="text-[11px] text-slate-500 mt-1">Cam kết SLA &lt; 30 phút</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <span class="text-xs font-semibold text-slate-500 uppercase">Chỉ số hài lòng (NPS)</span>
+            <h3 class="text-2xl font-black text-amber-600 mt-1">+88</h3>
+            <p class="text-[11px] text-emerald-600 mt-1">Mức độ rất xuất sắc</p>
+          </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="p-4 rounded-xl border border-slate-200">
+            <h4 class="text-xs font-bold text-slate-900 mb-3 uppercase">Phân Bố Bệnh Nhân Theo 4 Giai Đoạn</h4>
+            <div class="h-56">
+              <canvas id="pipelineDistributionChart"></canvas>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 text-xs">
+            <h4 class="text-xs font-bold text-slate-900 mb-3 uppercase">Đo Lường SLA & Chất Lượng Phục Vụ</h4>
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between font-semibold">
+                  <span>Cảnh báo khẩn cấp xử lý trong 30 phút:</span>
+                  <span class="text-emerald-700 font-bold">96% (24/25 ca)</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
+                  <div class="bg-emerald-500 h-2 rounded-full" style="width: 96%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between font-semibold">
+                  <span>Tỷ lệ bệnh nhân chuyển sang GĐ 4 (Phòng bệnh):</span>
+                  <span class="text-indigo-700 font-bold">42% (Mô hình khép kín)</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
+                  <div class="bg-indigo-500 h-2 rounded-full" style="width: 42%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between font-semibold">
+                  <span>Tỷ lệ bỏ theo dõi (Drop-out rate):</span>
+                  <span class="text-rose-700 font-bold">4.8% (Mức rất thấp)</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1">
+                  <div class="bg-rose-500 h-2 rounded-full" style="width: 5%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= MODAL: GHI NHẬT KÝ 1 PHÚT (MOBILE-FIRST) ================= -->
+  <div id="modalOneMinuteLog" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center">
+            <i class="fa-solid fa-stopwatch text-teal-600 mr-2"></i> Nhật Ký Sức Khỏe 1 Phút
+          </h3>
+          <p class="text-xs text-slate-500">Người bệnh hoàn thành chỉ trong 60 giây mỗi ngày</p>
+        </div>
+        <button onclick="closeModal('modalOneMinuteLog')" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-4 text-xs">
+        <!-- 1. Giấc ngủ -->
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">1. Đêm qua bạn ngủ thế nào?</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectLogSleepQuality('Tốt')" class="log-sleep-btn p-2 border rounded-lg text-center hover:bg-teal-50 font-medium">😊 Ngon giấc</button>
+            <button type="button" onclick="selectLogSleepQuality('Tạm')" class="log-sleep-btn p-2 border rounded-lg text-center bg-teal-50 border-teal-500 text-teal-800 font-bold">😐 Tạm ổn</button>
+            <button type="button" onclick="selectLogSleepQuality('Kém')" class="log-sleep-btn p-2 border rounded-lg text-center hover:bg-teal-50 font-medium">😫 Khó ngủ</button>
+          </div>
+          <div class="flex items-center space-x-2 mt-2">
+            <span class="text-slate-500 text-[11px]">Số giờ ngủ thực tế:</span>
+            <input type="number" step="0.5" id="log_sleep_hours" value="6.5" class="w-20 p-1.5 border border-slate-200 rounded text-center font-bold">
+            <span class="text-slate-500 text-[11px]">tiếng</span>
+          </div>
+        </div>
+
+        <!-- 2. Mức độ đau -->
+        <div>
+          <div class="flex justify-between items-center">
+            <label class="font-bold text-slate-700">2. Mức độ đau hiện tại (VAS 0 - 10):</label>
+            <span id="log_pain_val" class="font-bold text-rose-600">3 / 10</span>
+          </div>
+          <input type="range" id="log_pain_slider" min="0" max="10" value="3" oninput="document.getElementById('log_pain_val').innerText = this.value + ' / 10'" class="w-full mt-2 accent-rose-600">
+        </div>
+
+        <!-- 3. Năng lượng & Ăn uống -->
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">3. Mức năng lượng & Ăn uống hôm nay:</label>
+          <div class="grid grid-cols-2 gap-2">
+            <select id="log_energy" class="p-2 border border-slate-200 rounded-lg bg-slate-50">
+              <option>⚡ Năng lượng: Đủ tỉnh táo</option>
+              <option>⚡ Năng lượng: Khá mệt mỏi</option>
+              <option>⚡ Năng lượng: Rất sung sức</option>
+            </select>
+            <select id="log_appetite" class="p-2 border border-slate-200 rounded-lg bg-slate-50">
+              <option>🍚 Ăn uống: Ngon miệng</option>
+              <option>🍚 Ăn uống: Tạm được</option>
+              <option>🍚 Ăn uống: Đầy bụng, chán ăn</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 4. Checklist tuân thủ -->
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+          <label class="font-bold text-slate-800 block text-[11px]">Tuân thủ kế hoạch trong ngày:</label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" id="log_check_tea" checked class="rounded text-teal-600">
+            <span>Đã uống trà hoa cúc - tâm sen đúng giờ</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" id="log_check_exercise" checked class="rounded text-teal-600">
+            <span>Đã hoàn thành 15 phút bài tập giãn cơ lưng</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" id="log_check_coffee" checked class="rounded text-teal-600">
+            <span>Đã kiêng cà phê sau 14h00</span>
+          </label>
+        </div>
+
+        <!-- 5. Ghi chú & triệu chứng mới -->
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">Ghi chú hoặc triệu chứng lạ (nếu có):</label>
+          <input type="text" id="log_note" placeholder="Ví dụ: Lưng hơi mỏi khi ngồi lâu, ngủ sâu giấc hơn..." class="w-full p-2.5 border border-slate-200 rounded-lg">
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end space-x-2">
+        <button onclick="closeModal('modalOneMinuteLog')" class="px-4 py-2 border border-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 text-xs">
+          Hủy
+        </button>
+        <button onclick="submitOneMinuteLog()" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg shadow-sm text-xs">
+          <i class="fa-solid fa-paper-plane mr-1.5"></i> Gửi Nhật Ký
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: THẺ AN TOÀN CHO BỆNH NHÂN ================= -->
+  <div id="modalSafetyCard" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border-2 border-rose-400">
+      <div class="flex justify-between items-center pb-3 border-b border-rose-100">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold">
+            <i class="fa-solid fa-shield-virus"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-rose-950">THẺ AN TOÀN Y TẾ DÀNH CHO KHÁCH HÀNG</h3>
+            <p class="text-xs text-rose-700">Lưu trong điện thoại hoặc in mang theo bên người</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalSafetyCard')" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-4 text-xs">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between">
+          <div>
+            <span class="text-slate-500 text-[11px]">Bệnh nhân:</span>
+            <div id="safetyCardPatientName" class="font-bold text-slate-900">Nguyễn Văn An (Nam, 52T)</div>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-500 text-[11px]">Bác sĩ phụ trách:</span>
+            <div class="font-bold text-teal-800">ThS.BS Trần Văn Bình</div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 space-y-1">
+          <span class="font-bold text-sm flex items-center"><i class="fa-solid fa-ban mr-1.5"></i> 1. ĐIỀU CẦN TRÁNH TUYỆT ĐỐI</span>
+          <p class="text-[11px]">Không cúi khom bê vác vật nặng. Không tự ý uống phối hợp thuốc giảm đau NSAID với thuốc chống đông. Dị ứng Penicillin.</p>
+        </div>
+
+        <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 space-y-1">
+          <span class="font-bold text-sm flex items-center"><i class="fa-solid fa-headset mr-1.5"></i> 2. KHI NÀO CẦN GỌI ĐỘI NGŨ CSKH (0988.112.233)</span>
+          <p class="text-[11px]">Đau tăng &ge; 7/10; mất ngủ kéo dài trên 3 ngày; xuất hiện cảm giác hoa mắt chóng mặt hoặc ngứa dị ứng.</p>
+        </div>
+
+        <div class="p-3 bg-rose-100/70 rounded-xl border border-rose-300 text-rose-950 space-y-1">
+          <span class="font-bold text-sm flex items-center"><i class="fa-solid fa-truck-medical text-rose-600 mr-1.5"></i> 3. KHI NÀO CẦN ĐI CẤP CỨU (115) NGAY</span>
+          <p class="text-[11px] font-semibold">Bí tiểu hoặc mất kiểm soát tiểu tiện đột ngột; tê bì hoàn toàn vùng mông đáy chậu; liệt chân không đứng được.</p>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-between items-center pt-3 border-t border-slate-100">
+        <a href="tel:115" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-xs flex items-center">
+          <i class="fa-solid fa-phone-volume mr-1.5"></i> Gọi cấp cứu 115
+        </a>
+        <div class="space-x-2">
+          <button onclick="window.print()" class="px-3 py-2 bg-slate-100 text-slate-700 font-semibold rounded-lg text-xs hover:bg-slate-200">
+            <i class="fa-solid fa-print mr-1"></i> In thẻ
+          </button>
+          <button onclick="closeModal('modalSafetyCard')" class="px-4 py-2 bg-teal-600 text-white font-bold rounded-lg text-xs">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: TIẾP NHẬN HỒ SƠ MỚI ================= -->
+  <div id="modalNewPatient" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-900 flex items-center">
+          <i class="fa-solid fa-user-plus text-teal-600 mr-2"></i> Tiếp Nhận Bệnh Nhân Mới (Khởi tạo Giai đoạn 1)
+        </h3>
+        <button onclick="closeModal('modalNewPatient')" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-slate-700">Họ và tên bệnh nhân *</label>
+          <input type="text" id="new_name" placeholder="Nguyễn Văn B..." class="w-full mt-1 p-2 border border-slate-200 rounded-lg">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-slate-700">Năm sinh / Tuổi *</label>
+            <input type="number" id="new_age" placeholder="Ví dụ: 45" class="w-full mt-1 p-2 border border-slate-200 rounded-lg">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700">Giới tính</label>
+            <select id="new_gender" class="w-full mt-1 p-2 border border-slate-200 rounded-lg bg-slate-50">
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="font-bold text-slate-700">Số điện thoại liên hệ *</label>
+          <input type="text" id="new_phone" placeholder="09xx.xxx.xxx" class="w-full mt-1 p-2 border border-slate-200 rounded-lg">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700">Lý do tìm đến & Vấn đề ưu tiên chính *</label>
+          <input type="text" id="new_issue" placeholder="Ví dụ: Mất ngủ mãn tính, Đau khớp gối..." class="w-full mt-1 p-2 border border-slate-200 rounded-lg">
+        </div>
+        <div>
+          <label class="font-bold text-slate-700">Mức độ ưu tiên ban đầu</label>
+          <select id="new_risk" class="w-full mt-1 p-2 border border-slate-200 rounded-lg bg-slate-50">
+            <option value="Cao">🔴 Ưu tiên cao (Khẩn cấp / Đau nhiều)</option>
+            <option value="Trung bình" selected>🟡 Ưu tiên trung bình (Cần theo dõi)</option>
+            <option value="Thấp">🟢 Ưu tiên thấp (Tầm soát / Duy trì)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end space-x-2">
+        <button onclick="closeModal('modalNewPatient')" class="px-4 py-2 border border-slate-200 text-slate-700 font-semibold rounded-lg text-xs">
+          Hủy
+        </button>
+        <button onclick="submitNewPatient()" class="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg text-xs shadow-sm">
+          <i class="fa-solid fa-check mr-1.5"></i> Tạo Hồ Sơ & Mở Thẻ 1
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PRINTABLE 1-PAGE SUMMARY (Print View) ================= -->
+  <div id="printArea" class="hidden print-only p-8 bg-white text-slate-900">
+    <div class="border-b-2 border-slate-900 pb-4 mb-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-xl font-bold uppercase tracking-tight">Hồ Sơ Chăm Sóc Sức Khỏe Khép Kín</h1>
+        <p class="text-xs">Bản Tóm Tắt Kế Hoạch 1 Trang Dành Cho Bệnh Nhân & Gia Đình</p>
+      </div>
+      <div class="text-right text-xs">
+        <div class="font-mono font-bold" id="printCode">BN-2026-001</div>
+        <div>Ngày in: 19/10/2026</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 text-xs mb-4">
+      <div>
+        <b>Họ tên:</b> <span id="printName">Nguyễn Văn An</span><br>
+        <b>Tuổi / Giới:</b> <span id="printMeta">52 tuổi - Nam</span><br>
+        <b>Điện thoại:</b> <span id="printPhone">0912.345.678</span>
+      </div>
+      <div>
+        <b>Bác sĩ điều trị:</b> ThS.BS Trần Văn Bình<br>
+        <b>Chẩn đoán:</b> Mất ngủ mãn tính, Đau thắt lưng thoái hóa<br>
+        <b>Giai đoạn hiện tại:</b> Giai đoạn 3 (Đang theo dõi điều trị)
+      </div>
+    </div>
+
+    <div class="border border-slate-300 p-3 rounded mb-4 text-xs">
+      <h3 class="font-bold uppercase text-slate-800 mb-1">Mục tiêu chăm sóc đã thống nhất:</h3>
+      <p>1. Đạt thời lượng ngủ 7 tiếng/đêm trong 4 tuần. Giảm thời gian chờ vào giấc dưới 20 phút.<br>
+         2. Giảm đau thắt lưng từ 6/10 xuống &le; 3/10. Tự tin sinh hoạt và ngồi làm việc.<br>
+         3. Kiêng hoàn toàn cà phê sau 14h00, duy trì tập giãn cơ lưng 15 phút mỗi sáng.</p>
+    </div>
+
+    <div class="border border-slate-300 p-3 rounded mb-4 text-xs">
+      <h3 class="font-bold uppercase text-slate-800 mb-1">Recipe / Kế hoạch can thiệp Đợt 1:</h3>
+      <p>• <b>Thảo dược:</b> Trà hoa cúc – tâm sen 1 gói hãm 250ml nước sôi uống lúc 20h30 tối.<br>
+         • <b>Tây y duy trì:</b> Amlodipine 5mg 1 viên sau ăn sáng.<br>
+         • <b>Vận động:</b> Bài tập Williams kéo giãn cơ thắt lưng 15 phút/ngày.<br>
+         • <b>Vệ sinh giấc ngủ:</b> Tắt điện thoại sau 21h30, thở 4-7-8 khi lên giường.</p>
+    </div>
+
+    <div class="border border-rose-300 bg-rose-50 p-3 rounded text-xs text-rose-900">
+      <h3 class="font-bold uppercase mb-1">Dấu hiệu cảnh báo đỏ (Cần gọi 115 hoặc đi viện ngay):</h3>
+      <p>Mất kiểm soát đại tiểu tiện; tê bì mất cảm giác vùng mông đáy chậu; liệt chân không đứng được; sốt cao kèm đau lưng dữ dội.</p>
+    </div>
+
+    <div class="mt-8 pt-4 border-t border-slate-300 flex justify-between text-xs text-center">
+      <div>
+        <p class="font-bold">Khách hàng / Người được ủy quyền</p>
+        <p class="text-[10px] italic text-slate-500">(Đã được giải thích và đồng ý)</p>
+        <div class="h-14"></div>
+        <p class="font-semibold">Nguyễn Văn An</p>
+      </div>
+      <div>
+        <p class="font-bold">Bác sĩ phụ trách chuyên môn</p>
+        <p class="text-[10px] italic text-slate-500">(Ký số & Đóng dấu)</p>
+        <div class="h-14 flex items-center justify-center text-teal-700 font-bold italic">
+          [Đã Ký Số Điện Tử]
+        </div>
+        <p class="font-semibold">ThS.BS Trần Văn Bình</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC & LOCAL PERSISTENCE ================= -->
+  <script>
+    // Initial Preloaded Medical Data (Based on Document Requirements)
+    const DEFAULT_DATA = {
+      patients: [
+        {
+          id: 'BN-2026-001',
+          name: 'Nguyễn Văn An',
+          age: 52,
+          gender: 'Nam',
+          phone: '0912.345.678',
+          dob: '15/08/1974',
+          cccd: '001072008899',
+          contact: 'Trần Thị Lan (Vợ) - 0988.777.666 (Được ủy quyền)',
+          story: 'Kiến trúc sư làm việc máy tính đêm nhiều, mất ngủ 6 tháng nay, đau mỏi thắt lưng lan mông, muốn hạn chế thuốc an thần hóa dược.',
+          stage: 3,
+          risk: 'Cao',
+          primaryIssue: 'Mất ngủ mãn tính, Đau thắt lưng',
+          compliance: 90,
+          painScore: 4,
+          sleepHours: 6.5,
+          bloodPressure: '135/85',
+          heartRate: 76,
+          bmi: 25.5,
+          bodyPart: 'Thắt lưng / Cột sống thắt lưng',
+          recipeVersion: 'v1.2',
+          recipeApproved: true,
+          streak: 28,
+          lastUpdate: '18/10/2026',
+          alerts: [
+            { id: 1, type: 'red', text: 'Báo đau thắt lưng cấp tăng 8/10 khi đi công tác đường dài, cần bác sĩ hội chẩn lại liều thảo dược.', time: 'Hôm nay 08:30', status: 'pending' }
+          ]
+        },
+        {
+          id: 'BN-2026-002',
+          name: 'Trần Thị Bích Ngọc',
+          age: 45,
+          gender: 'Nữ',
+          phone: '0934.567.890',
+          dob: '22/04/1981',
+          cccd: '031181005544',
+          contact: 'Lê Tuấn Vũ (Chồng) - 0913.222.111',
+          story: 'Tiền sử tăng huyết áp độ 1 và tiền đái tháo đường. Đã điều trị ổn định sau 3 tháng, hiện chuyển sang Vườn Sức Khỏe duy trì phòng bệnh.',
+          stage: 4,
+          risk: 'Thấp',
+          primaryIssue: 'Tăng huyết áp, Tiền ĐTĐ',
+          compliance: 95,
+          painScore: 1,
+          sleepHours: 7.2,
+          bloodPressure: '120/80',
+          heartRate: 72,
+          bmi: 22.8,
+          bodyPart: 'Không có điểm đau',
+          recipeVersion: 'v2.0',
+          recipeApproved: true,
+          streak: 42,
+          lastUpdate: '19/10/2026',
+          alerts: []
+        },
+        {
+          id: 'BN-2026-003',
+          name: 'Lê Hoàng Cường',
+          age: 38,
+          gender: 'Nam',
+          phone: '0903.112.233',
+          dob: '10/11/1988',
+          cccd: '079088001234',
+          contact: 'Nguyễn Thu Trang (Vợ) - 0903.444.555',
+          story: 'Đau thắt lưng cấp sau khi nâng tạ sai tư thế. Bỏ check-in 5 ngày liên tục không phản hồi tin nhắn.',
+          stage: 2,
+          risk: 'Cao',
+          primaryIssue: 'Đau thắt lưng cấp (Nghi thoát vị đĩa đệm)',
+          compliance: 55,
+          painScore: 7,
+          sleepHours: 4.5,
+          bloodPressure: '140/90',
+          heartRate: 84,
+          bmi: 26.2,
+          bodyPart: 'Thắt lưng dưới',
+          recipeVersion: 'v1.0',
+          recipeApproved: false,
+          streak: 3,
+          lastUpdate: '14/10/2026',
+          alerts: [
+            { id: 2, type: 'red', text: 'Bỏ check-in theo dõi 5 ngày liên tục, gọi 2 cuộc chưa bắt máy!', time: '17/10/2026', status: 'pending' },
+            { id: 3, type: 'red', text: 'Tự ý uống phối hợp Ginkgo Biloba với Aspirin, cảnh báo tương tác xuất huyết!', time: '15/10/2026', status: 'pending' }
+          ]
+        },
+        {
+          id: 'BN-2026-004',
+          name: 'Phạm Minh Đức',
+          age: 60,
+          gender: 'Nam',
+          phone: '0982.999.888',
+          dob: '05/01/1966',
+          cccd: '001066009988',
+          contact: 'Phạm Đức Anh (Con trai) - 0989.123.456',
+          story: 'Mới tiếp nhận sáng nay. Mất ngủ, tiểu đêm nhiều lần, đau khớp gối thoái hóa. Đang hoàn thiện 6 thẻ thông minh.',
+          stage: 1,
+          risk: 'Trung bình',
+          primaryIssue: 'Mất ngủ, Đau khớp gối hai bên',
+          compliance: 80,
+          painScore: 5,
+          sleepHours: 4.0,
+          bloodPressure: '138/88',
+          heartRate: 78,
+          bmi: 24.5,
+          bodyPart: 'Chi dưới / Khớp gối',
+          recipeVersion: 'v0.1',
+          recipeApproved: false,
+          streak: 0,
+          lastUpdate: '19/10/2026',
+          alerts: []
+        }
+      ]
+    };
+
+    // State management
+    let state = {
+      patients: [],
+      activePatientId: 'BN-2026-001',
+      currentRole: 'doctor',
+      currentTab: 'dashboard'
+    };
+
+    // Load from LocalStorage or Default
+    function initApp() {
+      const saved = localStorage.getItem('medi_crm_data_v1');
+      if (saved) {
+        try {
+          state.patients = JSON.parse(saved);
+        } catch (e) {
+          state.patients = DEFAULT_DATA.patients;
+        }
+      } else {
+        state.patients = DEFAULT_DATA.patients;
+        saveState();
+      }
+
+      renderQuickPatientSelect();
+      renderActivePatient();
+      renderPatientsTable();
+      renderPriorityDashboard();
+      initCharts();
+    }
+
+    function saveState() {
+      localStorage.setItem('medi_crm_data_v1', JSON.stringify(state.patients));
+      renderQuickPatientSelect();
+      renderActivePatient();
+      renderPatientsTable();
+      renderPriorityDashboard();
+    }
+
+    function getActivePatient() {
+      return state.patients.find(p => p.id === state.activePatientId) || state.patients[0];
+    }
+
+    // Tab Navigation
+    function switchTab(tabId) {
+      state.currentTab = tabId;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeContent = document.getElementById('tab-' + tabId);
+      if (activeContent) activeContent.classList.remove('hidden');
+
+      // Update nav styling
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('text-teal-700', 'bg-teal-50', 'font-bold');
+        btn.classList.add('text-slate-600', 'font-semibold');
+      });
+      const activeNav = document.getElementById('nav-' + tabId);
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-600');
+        activeNav.classList.add('text-teal-700', 'bg-teal-50', 'font-bold');
+      }
+
+      // Re-render chart if switching to phase 3 or reports
+      if (tabId === 'phase3' && window.progressChart) {
+        setTimeout(() => window.progressChart.update(), 100);
+      }
+      if (tabId === 'reports' && window.distChart) {
+        setTimeout(() => window.distChart.update(), 100);
+      }
+    }
+
+    // Role Switcher
+    function changeRole(role) {
+      state.currentRole = role;
+      if (role === 'patient') {
+        alert('Đã chuyển sang giao diện Khách hàng (Mobile view). Bạn có thể thử nghiệm tính năng "Ghi Nhật Ký 1 Phút" và xem "Thẻ An Toàn"!');
+        openOneMinuteLogModal();
+      } else if (role === 'nurse') {
+        alert('Vai trò Điều dưỡng / CSKH: Tập trung vào Bảng điều khiển ưu tiên để xử lý các cảnh báo đỏ/vàng và nhắc lịch!');
+        switchTab('dashboard');
+      } else if (role === 'manager') {
+        alert('Vai trò Quản lý phòng khám: Xem các chỉ số KPI, SLA xử lý và phân bổ giai đoạn bệnh nhân!');
+        switchTab('reports');
+      } else {
+        alert('Vai trò Bác sĩ điều trị: Đầy đủ thẩm quyền đánh giá lâm sàng, Tứ chẩn, phê duyệt Recipe và ký số!');
+        switchTab('phase1');
+      }
+    }
+
+    // Active Patient Context Rendering
+    function renderActivePatient() {
+      const p = getActivePatient();
+      if (!p) return;
+
+      document.getElementById('activePatientName').innerText = p.name;
+      document.getElementById('activePatientCode').innerText = p.id;
+      document.getElementById('activePatientMeta').innerText = `${p.gender}, ${p.age} tuổi`;
+      document.getElementById('activePatientPhone').innerText = p.phone;
+      document.getElementById('activePatientPrimaryIssue').innerText = p.primaryIssue;
+      document.getElementById('patientAvatarCircle').innerText = p.name.split(' ').slice(-2).map(w => w[0]).join('').toUpperCase();
+
+      const stageLabels = {
+        1: 'Giai đoạn 1: Tiếp nhận',
+        2: 'Giai đoạn 2: Lập Recipe',
+        3: 'Giai đoạn 3: Theo dõi',
+        4: 'Giai đoạn 4: Vườn sức khỏe'
+      };
+      document.getElementById('activePatientStageBadge').innerText = stageLabels[p.stage] || 'Giai đoạn 1';
+
+      // Update Phase 1 inputs
+      const p1_name = document.getElementById('p1_name');
+      if (p1_name) p1_name.value = p.name;
+      const p1_code = document.getElementById('p1_code');
+      if (p1_code) p1_code.value = p.id;
+      const p1_dob = document.getElementById('p1_dob');
+      if (p1_dob) p1_dob.value = p.dob || '';
+      const p1_phone = document.getElementById('p1_phone');
+      if (p1_phone) p1_phone.value = `${p.phone}`;
+      const p1_contact = document.getElementById('p1_contact');
+      if (p1_contact) p1_contact.value = p.contact || '';
+      const p1_story = document.getElementById('p1_story');
+      if (p1_story) p1_story.value = p.story || '';
+
+      // Update Vitals
+      const bp = document.getElementById('vital_bp');
+      if (bp) bp.value = p.bloodPressure || '120/80';
+      const hr = document.getElementById('vital_hr');
+      if (hr) hr.value = p.heartRate || 75;
+      const bmiEl = document.getElementById('vital_bmi_display');
+      if (bmiEl) bmiEl.innerText = `${p.bmi || 24.0} kg/m²`;
+
+      // Update Pain
+      const painSlider = document.getElementById('painSlider');
+      if (painSlider) {
+        painSlider.value = p.painScore || 4;
+        updatePainScore(p.painScore || 4);
+      }
+
+      // Update Printables
+      const printName = document.getElementById('printName');
+      if (printName) printName.innerText = p.name;
+      const printCode = document.getElementById('printCode');
+      if (printCode) printCode.innerText = p.id;
+      const printMeta = document.getElementById('printMeta');
+      if (printMeta) printMeta.innerText = `${p.age} tuổi - ${p.gender}`;
+      const printPhone = document.getElementById('printPhone');
+      if (printPhone) printPhone.innerText = p.phone;
+
+      // Update Safety card name
+      const scName = document.getElementById('safetyCardPatientName');
+      if (scName) scName.innerText = `${p.name} (${p.gender}, ${p.age}T)`;
+    }
+
+    function renderQuickPatientSelect() {
+      const select = document.getElementById('patientQuickSelect');
+      if (!select) return;
+      select.innerHTML = state.patients.map(p => `
+        <option value="${p.id}" ${p.id === state.activePatientId ? 'selected' : ''}>
+          ${p.name} (${p.id}) - GĐ ${p.stage}
+        </option>
+      `).join('');
+    }
+
+    function switchActivePatient(id) {
+      state.activePatientId = id;
+      renderActivePatient();
+    }
+
+    // Render Priority Triage Dashboard (Traffic Light)
+    function renderPriorityDashboard() {
+      const p = getActivePatient();
+      const redContainer = document.getElementById('redAlertsList');
+      const yellowContainer = document.getElementById('yellowAlertsList');
+
+      // Total counters
+      let totalRed = 0;
+      let redHtml = '';
+      state.patients.forEach(pat => {
+        if (pat.alerts && pat.alerts.length > 0) {
+          pat.alerts.filter(a => a.type === 'red' && a.status === 'pending').forEach(a => {
+            totalRed++;
+            redHtml += `
+              <div class="p-3 bg-white rounded-lg border border-rose-200 flex flex-wrap justify-between items-center gap-2 text-xs">
+                <div>
+                  <span class="font-bold text-rose-950">${pat.name} (${pat.id})</span>
+                  <span class="text-rose-500 text-[11px] ml-2">• ${a.time}</span>
+                  <p class="text-slate-700 mt-0.5">${a.text}</p>
+                </div>
+                <div class="flex items-center space-x-1.5">
+                  <button onclick="handleUrgentCall('${pat.phone}', '${pat.name}')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded text-[11px]">
+                    <i class="fa-solid fa-phone mr-1"></i> Gọi lại ngay
+                  </button>
+                  <button onclick="resolveAlert('${pat.id}', ${a.id})" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded text-[11px]">
+                    Đóng cảnh báo
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+        }
+      });
+
+      if (redContainer) {
+        redContainer.innerHTML = redHtml || '<p class="text-xs text-rose-700">Không có cảnh báo khẩn cấp đang chờ xử lý.</p>';
+      }
+      const countRed = document.getElementById('countRedAlerts');
+      if (countRed) countRed.innerText = totalRed;
+      const badgeUrgent = document.getElementById('badgeUrgentAlerts');
+      if (badgeUrgent) badgeUrgent.innerText = totalRed;
+      const statAlert = document.getElementById('statAlertCount');
+      if (statAlert) statAlert.innerText = totalRed;
+
+      // Yellow list
+      const yellowHtml = `
+        <div class="p-3 bg-white rounded-lg border border-amber-200 flex justify-between items-center text-xs">
+          <div>
+            <span class="font-bold text-slate-800">3 Khách hàng đến hạn check-in tuần</span>
+            <p class="text-slate-600 text-[11px]">Nguyễn Văn An, Phạm Minh Đức, Lê Hoàng Cường (Hệ thống đã gửi Zalo tự động)</p>
+          </div>
+          <button onclick="alert('Đã gửi thông báo nhắc lịch hàng loạt!')" class="px-2.5 py-1 bg-amber-600 text-white rounded text-[11px] font-semibold">Gửi nhắc nhở</button>
+        </div>
+        <div class="p-3 bg-white rounded-lg border border-amber-200 flex justify-between items-center text-xs">
+          <div>
+            <span class="font-bold text-slate-800">2 Khách hàng cần tái khám cột sống trong 7 ngày tới</span>
+            <p class="text-slate-600 text-[11px]">Đã sắp xếp vào ca khám Thứ Bảy của ThS.BS Bình</p>
+          </div>
+          <button onclick="alert('Đã kiểm tra lịch hẹn khám!')" class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded text-[11px] font-semibold">Xem lịch</button>
+        </div>
+      `;
+      if (yellowContainer) yellowContainer.innerHTML = yellowHtml;
+
+      // Stats
+      document.getElementById('statTotalPatients').innerText = state.patients.length;
+      document.getElementById('badgeTotalPatients').innerText = state.patients.length;
+      document.getElementById('statActiveRecipe').innerText = state.patients.filter(p => p.stage === 2 || p.stage === 3).length;
+      document.getElementById('statGardenCount').innerText = state.patients.filter(p => p.stage === 4).length;
+    }
+
+    // Render Patients Table
+    function renderPatientsTable(list = null) {
+      const container = document.getElementById('patientsTableBody');
+      if (!container) return;
+      const patients = list || state.patients;
+
+      container.innerHTML = patients.map(p => {
+        const stageColors = {
+          1: 'bg-blue-100 text-blue-800',
+          2: 'bg-amber-100 text-amber-800',
+          3: 'bg-emerald-100 text-emerald-800',
+          4: 'bg-indigo-100 text-indigo-800'
+        };
+        const riskColors = {
+          'Cao': 'bg-rose-100 text-rose-800',
+          'Trung bình': 'bg-amber-100 text-amber-800',
+          'Thấp': 'bg-emerald-100 text-emerald-800'
+        };
+
+        return `
+          <tr class="hover:bg-slate-50 transition-colors ${p.id === state.activePatientId ? 'bg-teal-50/50' : ''}">
+            <td class="py-3 px-4">
+              <div class="font-bold text-slate-900">${p.name}</div>
+              <div class="text-[11px] font-mono text-slate-400">${p.id} • ${p.phone}</div>
+            </td>
+            <td class="py-3 px-3 text-xs">${p.age}T / ${p.gender}</td>
+            <td class="py-3 px-3 text-xs font-medium text-slate-700">${p.primaryIssue}</td>
+            <td class="py-3 px-3">
+              <span class="text-[11px] px-2 py-0.5 rounded-full font-bold ${stageColors[p.stage]}">
+                GĐ ${p.stage}
+              </span>
+            </td>
+            <td class="py-3 px-3">
+              <span class="text-[11px] px-2 py-0.5 rounded font-semibold ${riskColors[p.risk]}">
+                ${p.risk}
+              </span>
+            </td>
+            <td class="py-3 px-3 text-xs">
+              <div class="font-bold text-slate-800">${p.compliance}%</div>
+              <div class="w-16 bg-slate-200 h-1.5 rounded-full overflow-hidden mt-0.5">
+                <div class="bg-teal-600 h-1.5 rounded-full" style="width: ${p.compliance}%"></div>
+              </div>
+            </td>
+            <td class="py-3 px-3 text-[11px] text-slate-500">${p.lastUpdate}</td>
+            <td class="py-3 px-4 text-right space-x-1">
+              <button onclick="selectAndOpenPatient('${p.id}')" class="text-xs px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded shadow-xs">
+                Mở hồ sơ
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function selectAndOpenPatient(id) {
+      state.activePatientId = id;
+      const p = getActivePatient();
+      renderActivePatient();
+      // Jump to the current stage of this patient
+      const stageTabs = { 1: 'phase1', 2: 'phase2', 3: 'phase3', 4: 'phase4' };
+      switchTab(stageTabs[p.stage] || 'phase1');
+    }
+
+    function filterPatientsList() {
+      const stage = document.getElementById('filterStageSelect').value;
+      if (stage === 'all') {
+        renderPatientsTable(state.patients);
+      } else {
+        const filtered = state.patients.filter(p => p.stage === parseInt(stage));
+        renderPatientsTable(filtered);
+      }
+    }
+
+    function handleGlobalSearch(e) {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) {
+        renderPatientsTable(state.patients);
+        return;
+      }
+      const filtered = state.patients.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        p.id.toLowerCase().includes(q) ||
+        p.phone.includes(q) ||
+        p.primaryIssue.toLowerCase().includes(q)
+      );
+      renderPatientsTable(filtered);
+      if (e.key === 'Enter' && filtered.length > 0) {
+        selectAndOpenPatient(filtered[0].id);
+      }
+    }
+
+    // Smart Card Toggle
+    function toggleCard(cardId) {
+      const content = document.getElementById('content-' + cardId);
+      const icon = document.getElementById('icon-' + cardId);
+      if (!content) return;
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        if (icon) icon.classList.remove('rotate-180');
+      } else {
+        content.classList.add('hidden');
+        if (icon) icon.classList.add('rotate-180');
+      }
+    }
+
+    // Interactive Body Map Selection
+    function selectBodyPart(partName, painVal) {
+      const p = getActivePatient();
+      p.bodyPart = partName;
+      p.painScore = painVal;
+      document.getElementById('selectedBodyPartText').innerText = 'Vị trí: ' + partName;
+      document.getElementById('painSlider').value = painVal;
+      updatePainScore(painVal);
+      saveState();
+    }
+
+    function updatePainScore(val) {
+      const p = getActivePatient();
+      p.painScore = parseInt(val);
+      const desc = val <= 2 ? 'Đau nhẹ - không ảnh hưởng' :
+                   val <= 5 ? 'Đau vừa - khó chịu' :
+                   val <= 8 ? 'Đau nhiều - hạn chế vận động' : 'Đau dữ dội - khẩn cấp';
+      document.getElementById('painScoreValue').innerText = `${val} / 10 (${desc})`;
+    }
+
+    function calculateBmiAuto() {
+      const h = parseFloat(document.getElementById('vital_height').value) / 100;
+      const w = parseFloat(document.getElementById('vital_weight').value);
+      if (h > 0 && w > 0) {
+        const bmi = (w / (h * h)).toFixed(1);
+        document.getElementById('vital_bmi_display').innerText = `${bmi} kg/m²`;
+        let status = 'Bình thường';
+        if (bmi < 18.5) status = 'Gầy / Thiếu cân';
+        else if (bmi >= 23 && bmi < 25) status = 'Thừa cân nhẹ';
+        else if (bmi >= 25) status = 'Tiền béo phì (Nguy cơ tim mạch)';
+        document.getElementById('vital_bmi_status').innerText = status;
+        const p = getActivePatient();
+        p.bmi = bmi;
+      }
+    }
+
+    function compareWithPreviousExam() {
+      alert(`[SO SÁNH VỚI LẦN KHÁM TRƯỚC - 15/09/2026]\n
+• Huyết áp: 140/90 mmHg → Hiện tại: 135/85 mmHg (↓ Giảm 5 mmHg)
+• Cân nặng: 74 kg → Hiện tại: 72 kg (↓ Giảm 2 kg)
+• Điểm đau thắt lưng: 6/10 → Hiện tại: 4/10 (Cải thiện rõ)
+• Thời gian ngủ: 4.0h/đêm → Hiện tại: 6.5h/đêm (Tăng 2.5h)`);
+    }
+
+    function simulateVoiceDictation() {
+      alert('Đang lắng nghe giọng nói của Bác sĩ...\n(Ghi nhận âm thanh: "Bệnh nhân nam 52 tuổi, mất ngủ nhiều về đêm, mạch trầm tế, đã điền tự động vào thẻ 2 và thẻ 3!")');
+      document.getElementById('p1_story').value += '\n[Bổ sung ghi âm giọng nói]: Giấc ngủ chập chờn, sáng dậy uể oải, lưng co cứng khi thay đổi thời tiết.';
+    }
+
+    function runInteractionChecker() {
+      const res = document.getElementById('interactionCheckResult');
+      res.classList.remove('hidden');
+      alert('Kiểm tra tương tác hoàn tất! Phát hiện 1 tương tác mức độ trung bình giữa Ginkgo Biloba và Amlodipine. Đã cập nhật cảnh báo vào hồ sơ.');
+    }
+
+    function saveCurrentPatientPhase1() {
+      const p = getActivePatient();
+      p.name = document.getElementById('p1_name').value;
+      p.dob = document.getElementById('p1_dob').value;
+      p.contact = document.getElementById('p1_contact').value;
+      p.story = document.getElementById('p1_story').value;
+      saveState();
+      alert('Đã lưu thành công thông tin Giai đoạn 1 vào cơ sở dữ liệu!');
+    }
+
+    function advanceToPhase2() {
+      const p = getActivePatient();
+      p.stage = Math.max(p.stage, 2);
+      saveState();
+      switchTab('phase2');
+    }
+
+    function advanceToPhase4() {
+      const p = getActivePatient();
+      p.stage = 4;
+      p.risk = 'Thấp';
+      saveState();
+      switchTab('phase4');
+      alert(`Bệnh nhân ${p.name} đã ổn định các mục tiêu điều trị và chính thức được chuyển sang Giai đoạn 4: Vườn Sức Khỏe & Phòng Bệnh Chủ Động!`);
+    }
+
+    function signAndApproveRecipe() {
+      const p = getActivePatient();
+      p.recipeApproved = true;
+      saveState();
+      alert(`[KÝ SỐ THÀNH CÔNG]\nThS.BS Trần Văn Bình đã ký số phê duyệt Recipe ${p.recipeVersion} cho bệnh nhân ${p.name}.\nThời gian ký: ${new Date().toLocaleString('vi-VN')}`);
+    }
+
+    // Triage Action Handlers
+    function handleUrgentCall(phone, name) {
+      alert(`Đang kết nối cuộc gọi khẩn cấp tới ${name} (${phone})...\nTrạng thái: Nhân viên CSKH/Bác sĩ đang tiếp nhận.`);
+    }
+
+    function resolveAlert(patId, alertId) {
+      const pat = state.patients.find(p => p.id === patId);
+      if (pat && pat.alerts) {
+        const a = pat.alerts.find(al => al.id === alertId);
+        if (a) a.status = 'resolved';
+        saveState();
+        alert('Đã đóng cảnh báo và lưu vào Audit Trail!');
+      }
+    }
+
+    // Modal Control
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function openOneMinuteLogModal() {
+      openModal('modalOneMinuteLog');
+    }
+
+    function openPatientSafetyCard() {
+      openModal('modalSafetyCard');
+    }
+
+    function openNewPatientModal() {
+      openModal('modalNewPatient');
+    }
+
+    function submitOneMinuteLog() {
+      const hours = document.getElementById('log_sleep_hours').value;
+      const pain = document.getElementById('log_pain_slider').value;
+      const note = document.getElementById('log_note').value;
+      const p = getActivePatient();
+
+      p.sleepHours = parseFloat(hours);
+      p.painScore = parseInt(pain);
+      p.compliance = Math.min(100, p.compliance + 2);
+      p.lastUpdate = 'Hôm nay';
+
+      // Append to timeline
+      const timelineContainer = document.getElementById('healthTimelineEntries');
+      if (timelineContainer) {
+        const newEntry = document.createElement('div');
+        newEntry.className = 'flex items-start space-x-3 p-3.5 bg-emerald-50/70 rounded-xl border border-emerald-300 text-xs animate-pulse';
+        newEntry.innerHTML = `
+          <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-emerald-950">Vừa gửi — Nhật ký 1 phút (Mobile)</span>
+              <span class="text-emerald-700 text-[11px] font-bold">Vừa xong</span>
+            </div>
+            <p class="text-emerald-900 mt-1">Giấc ngủ: ${hours} tiếng • Đau: ${pain}/10 • Ghi chú: ${note || 'Tuân thủ đầy đủ'}</p>
+          </div>
+        `;
+        timelineContainer.prepend(newEntry);
+      }
+
+      saveState();
+      closeModal('modalOneMinuteLog');
+      alert('Đã ghi nhận nhật ký 1 phút thành công! Dữ liệu đã được cập nhật vào Health Timeline.');
+    }
+
+    function submitNewPatient() {
+      const name = document.getElementById('new_name').value.trim();
+      const age = parseInt(document.getElementById('new_age').value) || 40;
+      const gender = document.getElementById('new_gender').value;
+      const phone = document.getElementById('new_phone').value.trim();
+      const issue = document.getElementById('new_issue').value.trim();
+      const risk = document.getElementById('new_risk').value;
+
+      if (!name || !phone) {
+        alert('Vui lòng nhập đầy đủ họ tên và số điện thoại bệnh nhân!');
+        return;
+      }
+
+      const newId = 'BN-2026-00' + (state.patients.length + 1);
+      const newPatient = {
+        id: newId,
+        name: name,
+        age: age,
+        gender: gender,
+        phone: phone,
+        dob: `${2026 - age}`,
+        cccd: 'Chưa cập nhật',
+        contact: 'Người thân - ' + phone,
+        story: issue,
+        stage: 1,
+        risk: risk,
+        primaryIssue: issue || 'Khám tổng quát',
+        compliance: 100,
+        painScore: 5,
+        sleepHours: 5.5,
+        bloodPressure: '120/80',
+        heartRate: 75,
+        bmi: 23.5,
+        bodyPart: 'Chưa xác định',
+        recipeVersion: 'v0.1',
+        recipeApproved: false,
+        streak: 0,
+        lastUpdate: 'Hôm nay',
+        alerts: []
+      };
+
+      state.patients.unshift(newPatient);
+      state.activePatientId = newId;
+      saveState();
+      closeModal('modalNewPatient');
+      switchTab('phase1');
+      alert(`Đã tạo thành công hồ sơ mới ${newId} cho bệnh nhân ${name}! Bắt đầu hoàn thiện 6 Thẻ thông minh.`);
+    }
+
+    // AI Copilot Clinical Toolkits
+    function runAiSummary() {
+      const p = getActivePatient();
+      const el = document.getElementById('aiOutputContent');
+      el.innerHTML = `
+        <div class="space-y-2">
+          <div class="text-teal-300 font-bold">📋 TÓM TẮT HÀNH TRÌNH BỆNH ÁN KHÉP KÍN — BỆNH NHÂN: ${p.name.toUpperCase()} (${p.id})</div>
+          <p>• <b>Tình trạng ban đầu (GĐ 1):</b> Nam ${p.age} tuổi, vấn đề chính là ${p.primaryIssue}. Thể trạng Tâm Tỳ Hư / Khí huyết bất túc theo YHCT. Thói quen ngồi nhiều và uống cà phê chiều.</p>
+          <p>• <b>Kế hoạch can thiệp (GĐ 2):</b> Recipe ${p.recipeVersion} phối hợp trà hoa cúc - tâm sen an thần, duy trì Amlodipine huyết áp, bài tập Williams 15p/ngày, thiết lập vệ sinh giấc ngủ.</p>
+          <p>• <b>Diễn biến điều trị (GĐ 3):</b> Tuân thủ đạt ${p.compliance}%. Giấc ngủ cải thiện từ 4.0h lên ${p.sleepHours}h/đêm. Mức đau lưng giảm từ 6/10 xuống ${p.painScore}/10.</p>
+          <p>• <b>Định hướng kế tiếp (GĐ 4):</b> Chuẩn bị chuyển sang Vườn Sức Khỏe duy trì phòng ngừa tim mạch & thoái hóa cột sống.</p>
+        </div>
+      `;
+    }
+
+    function runAiInteractionAudit() {
+      const el = document.getElementById('aiOutputContent');
+      el.innerHTML = `
+        <div class="space-y-2 text-rose-200">
+          <div class="text-rose-400 font-bold">⚠️ RÀ SOÁT TƯƠNG TÁC THUỐC TÂY – THẢO DƯỢC & CHỐNG CHỈ ĐỊNH:</div>
+          <p>1. <b>Bạch quả (Ginkgo Biloba) + Thuốc chống ngưng tập tiểu cầu (Aspirin/Clopidogrel):</b> Nguy cơ tăng xuất huyết vi thể não và tiêu hóa. Khuyến cáo ngừng Ginkgo ít nhất 7 ngày trước bất kỳ thủ thuật nào.</p>
+          <p>2. <b>Trà Tâm sen + Amlodipine:</b> Cả hai đều có tác dụng hạ áp và dãn mạch. Khuyên bệnh nhân uống cách nhau ít nhất 2 giờ, theo dõi chỉ số huyết áp ban đêm tránh hạ áp tư thế.</p>
+          <p>3. <b>Dị ứng Penicillin:</b> Ghi nhận cảnh báo đỏ, nghiêm cấm kê đơn Amoxicillin/Augmentin.</p>
+        </div>
+      `;
+    }
+
+    function runAiQuestions() {
+      const p = getActivePatient();
+      const el = document.getElementById('aiOutputContent');
+      el.innerHTML = `
+        <div class="space-y-2 text-blue-200">
+          <div class="text-blue-300 font-bold">❓ BỘ CÂU HỎI VẤN CHẨN THÔNG MINH GỢI Ý CHO BÁC SĨ (Dựa trên thể trạng ${p.name}):</div>
+          <p>1. <i>"Khi khó ngủ, bác cảm thấy bồn chồn lo lắng trong ngực hay chỉ là tỉnh táo đầu óc không buồn ngủ?"</i> (Phân biệt Tâm Thận bất giao vs Tâm Tỳ Hư).</p>
+          <p>2. <i>"Cơn đau thắt lưng của bác tăng lên khi cúi người hay khi ưỡn người ra sau? Về đêm nằm nghỉ có đỡ đau không?"</i> (Đánh giá chèn ép rễ thần kinh).</p>
+          <p>3. <i>"Buổi sáng thức dậy miệng bác có đắng hay khô khát muốn uống nước lạnh không?"</i> (Đánh giá Can hỏa / Nhiệt chứng).</p>
+        </div>
+      `;
+    }
+
+    function runAiEducationDoc() {
+      const p = getActivePatient();
+      const el = document.getElementById('aiOutputContent');
+      el.innerHTML = `
+        <div class="space-y-2 text-emerald-200">
+          <div class="text-emerald-300 font-bold">📄 CẨM NANG HƯỚNG DẪN TỰ CHĂM SÓC DÀNH CHO: ${p.name.toUpperCase()}</div>
+          <p><b>Kính gửi Bác ${p.name},</b></p>
+          <p>Để đạt được giấc ngủ trọn vẹn 7 tiếng và giảm dứt điểm đau thắt lưng, Bác hãy duy trì 3 nguyên tắc vàng sau:</p>
+          <p>1. <b>Vệ sinh giấc ngủ:</b> Uống 1 tách trà thảo dược ấm lúc 20h30. Để điện thoại xa giường ngủ ít nhất 2 mét.</p>
+          <p>2. <b>Bài tập lưng:</b> Tập 15 phút giãn cơ vào 7h sáng mỗi ngày theo video bác sĩ đã gửi.</p>
+          <p>3. <b>Ăn uống:</b> Ăn nhẹ buổi tối, hạn chế mặn, tuyệt đối không dùng cà phê sau 14h chiều.</p>
+        </div>
+      `;
+    }
+
+    function copyAiOutput() {
+      const text = document.getElementById('aiOutputContent').innerText;
+      navigator.clipboard.writeText(text);
+      alert('Đã sao chép nội dung phân tích của AI vào bộ nhớ tạm!');
+    }
+
+    function printPatientSummary() {
+      window.print();
+    }
+
+    // Export & Import Data JSON
+    function exportDataJson() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.patients, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `MediCRM_Data_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+    }
+
+    function importDataJson(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (Array.isArray(parsed)) {
+            state.patients = parsed;
+            saveState();
+            alert('Nhập dữ liệu thành công!');
+          }
+        } catch (err) {
+          alert('Lỗi định dạng file JSON!');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetDemoData() {
+      if (confirm('Khôi phục lại toàn bộ dữ liệu mẫu ban đầu theo Đề cương CRM?')) {
+        state.patients = JSON.parse(JSON.stringify(DEFAULT_DATA.patients));
+        state.activePatientId = 'BN-2026-001';
+        saveState();
+        alert('Đã khôi phục dữ liệu mẫu ban đầu thành công!');
+      }
+    }
+
+    // Chart.js Visualizations
+    function initCharts() {
+      // 1. Health Progress Chart (30 Days)
+      const ctxProgress = document.getElementById('healthProgressChart');
+      if (ctxProgress) {
+        window.progressChart = new Chart(ctxProgress, {
+          type: 'line',
+          data: {
+            labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'],
+            datasets: [
+              {
+                label: 'Mức đau lưng VAS (0-10)',
+                data: [6.0, 5.2, 4.5, 3.8],
+                borderColor: '#f43f5e',
+                backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                tension: 0.3,
+                fill: true
+              },
+              {
+                label: 'Số giờ ngủ/đêm (Giờ)',
+                data: [4.0, 5.0, 6.0, 6.8],
+                borderColor: '#0d9488',
+                backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                tension: 0.3,
+                fill: true
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { beginAtZero: true, max: 10 }
+            }
+          }
+        });
+      }
+
+      // 2. Pipeline Distribution Chart
+      const ctxDist = document.getElementById('pipelineDistributionChart');
+      if (ctxDist) {
+        window.distChart = new Chart(ctxDist, {
+          type: 'doughnut',
+          data: {
+            labels: ['GĐ 1: Tiếp nhận', 'GĐ 2: Lập Recipe', 'GĐ 3: Đang theo dõi', 'GĐ 4: Vườn sức khỏe'],
+            datasets: [{
+              data: [1, 1, 1, 1],
+              backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#6366f1']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+      }
+    }
+
+    // Hotkey Ctrl+K for search
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('globalSearchInput');
+        if (searchInput) searchInput.focus();
+      }
+    });
+
+    // Start App on Load
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
